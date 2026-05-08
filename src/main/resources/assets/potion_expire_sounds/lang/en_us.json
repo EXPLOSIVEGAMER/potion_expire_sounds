@@ -1,0 +1,21 @@
+{
+  "gui.potion_expire_sounds.potion_hud.edit_screen": "Edit Potion Hud",
+  "gui.potion_expire_sounds.potion_hud.element": "Hud Element",
+  "gui.potion_expire_sounds.potion_hud.drag_tooltip": "Drag to move, ESC to save",
+
+  "config.potion_expire_sounds.play_warning_sound": "Play Warning Sound",
+  "config.potion_expire_sounds.play_warning_sound2": "Play Warning Sound: 2",
+  "config.potion_expire_sounds.play_expire_sound": "Play Expire Sound",
+  "config.potion_expire_sounds.warning_threshold": "Warning Threshold",
+
+  "config.potion_expire_sounds.volume.expire": "Volume on Expire",
+  "config.potion_expire_sounds.pitch.expire": "Pitch on Expire",
+  "config.potion_expire_sounds.volume.warning": "Volume on Warning",
+  "config.potion_expire_sounds.pitch.warning": "Pitch on Warning",
+
+  "config.potion_expire_sounds.list_type": "List Type",
+  "config.potion_expire_sounds.sound_potion_expire": "Sound Type on Expire",
+  "config.potion_expire_sounds.sound_potion_warning": "Sound Type on Warning",
+  "config.potion_expire_sounds.toggle_potion_hud": "HUD",
+  "config.potion_expire_sounds.open_potion_hud_editor": "Hud Editor"
+}

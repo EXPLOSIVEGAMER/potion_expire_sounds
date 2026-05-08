@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "id": "potion_expire_sounds",
+  "version": "${version}",
+  "name": "Potion Expire Sounds",
+  "description": "",
+  "authors": ["WoodEXPLOSIVE", "MausDragoner431"],
+  "contact": {},
+  "license": "All-Rights-Reserved",
+  "icon": "assets/potion_expire_sounds/icon.png",
+  "environment": "client",
+  "entrypoints": {
+    "fabric-datagen": [
+      "at.woodexplosive.potion_expire_sounds.client.PotionExpireSoundsDataGenerator"
+    ],
+    "client": [
+      "at.woodexplosive.potion_expire_sounds.client.PotionExpireSoundsClient"
+    ],
+    "main": [
+      "at.woodexplosive.potion_expire_sounds.PotionExpireSounds"
+    ],
+    "modmenu": [
+      "at.woodexplosive.potion_expire_sounds.config.ModMenuIntegration"
+    ]
+  },
+  "mixins": [
+    "potion_expire_sounds.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=${loader_version}",
+    "fabric-api": "*",
+    "minecraft": "${minecraft_version}",
+    "cloth-config": "*"
+  },
+  "suggests": {
+    "modmenu": "*"
+  }
+}
