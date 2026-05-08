@@ -5,7 +5,6 @@ import at.woodexplosive.potion_expire_sounds.sound.ModSounds;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Identifier;
 
 import java.io.IOException;
@@ -13,8 +12,8 @@ import java.io.Reader;
 import java.io.Writer;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 import static at.woodexplosive.potion_expire_sounds.PotionExpireSounds.MOD_ID;
 
@@ -37,7 +36,7 @@ public class ModConfig {
     public float pitch_expire = 1.0f;
     public float pitch_warning = 1.0f;
     public ListType listType = ListType.BLACKLIST;
-    public List<String> effectList = new ArrayList<>();
+    public Map<String, Boolean> effectMap = new HashMap<>();
     public Identifier soundPotionExpire = ModSounds.POTION_EXPIRE.id();
     public Identifier soundPotionWarning = ModSounds.POTION_WARNING.id();
 
