@@ -1,7 +1,7 @@
 {
   "gui.potion_expire_sounds.potion_hud.edit_screen": "Edit Potion Hud",
   "gui.potion_expire_sounds.potion_hud.element": "Hud Element",
-  "gui.potion_expire_sounds.potion_hud.drag_tooltip": "Drag to move, ESC to save",
+  "gui.potion_expire_sounds.potion_hud.drag_tooltip": "Drag to move",
   "gui.potion_expire_sounds.potion_hud.close_button": "Close",
 
   "config.potion_expire_sounds.play_warning_sound": "Play Warning Sound",

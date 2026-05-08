@@ -31,7 +31,7 @@ public class PotionHudEditScreen extends Screen {
     }
 
     @Override
-    protected void init() {
+    public void init() {
         super.init();
 
         ButtonWidget closeButton = ButtonWidget.builder(
@@ -43,7 +43,7 @@ public class PotionHudEditScreen extends Screen {
                 .dimensions(this.width / 2 - 100, this.height - 30, 200, 20)
                 .build();
 
-        this.addDrawable(closeButton);
+        this.addDrawableChild(closeButton);
     }
 
     @Override
