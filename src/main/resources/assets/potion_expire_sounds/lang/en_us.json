@@ -7,7 +7,7 @@
   "gui.potion_expire_sounds.potion_hud.close_button": "Close",
   "gui.potion_expire_sounds.potion_hud.reset_button": "Reset",
 
-  "hud.potion_expire_sounds.potion_hud.compact_hud.tooltip": "%s+ Effects",
+  "hud.potion_expire_sounds.potion_hud.compact_hud.tooltip": "+%s Effects",
 
   "config.potion_expire_sounds.play_warning_sound": "Play Warning Sound",
   "config.potion_expire_sounds.play_warning_sound2": "Play Countdown Sound",
