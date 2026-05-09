@@ -35,9 +35,21 @@ public class PotionHudEditScreen extends Screen {
                         Text.translatable(TRANSLATION_PATH + "close_button"),
                         btn -> this.close()
                 )
-                .dimensions(this.width / 2 - 100, this.height - 30, 200, 20)
+                .dimensions(this.width / 2 + 10, this.height - 30, 100, 20)
                 .build();
 
+        ButtonWidget resetButton = ButtonWidget.builder(
+                        Text.translatable(TRANSLATION_PATH + "reset_button"),
+                        btn -> {
+                            ModConfig.INSTANCE.potionHudX = width / 2;
+                            ModConfig.INSTANCE.potionHudY = height / 2;
+                            this.close();
+                            this.client.setScreen(new PotionHudEditScreen(parent));
+                        }
+                ).dimensions(this.width / 2 - 110, this.height - 30, 100, 20)
+                .build();
+
+        this.addDrawableChild(resetButton);
         this.addDrawableChild(closeButton);
     }
 

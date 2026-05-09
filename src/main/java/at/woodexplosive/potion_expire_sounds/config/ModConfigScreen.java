@@ -25,7 +25,7 @@ public class ModConfigScreen {
 
     private static final String CONFIG_PATH = "config." + MOD_ID + ".";
     private static final List<String> allSoundEventIds = Registries.SOUND_EVENT.getIds()
-            .stream().map(Identifier::getPath).toList();
+            .stream().map(Identifier::toString).toList();
 
     public static Screen createScreen(Screen parent) {
         ConfigBuilder builder = ConfigBuilder.create()
@@ -140,23 +140,33 @@ public class ModConfigScreen {
                 .setSaveConsumer(b -> ModConfig.INSTANCE.displayPotionHud = b)
                 .build());
 
+        advanced.addEntry(entryBuilder
+                .startTextDescription(Text.translatable(CONFIG_PATH+"potion_hud.comact_hud.desc"))
+                .build());
+
+        advanced.addEntry(entryBuilder
+                .startBooleanToggle(
+                        Text.translatable(CONFIG_PATH+"potion_hud.compact_hud.toggle"),
+                        ModConfig.INSTANCE.compactHud
+                )
+                .setDefaultValue(false)
+                .setSaveConsumer(b -> ModConfig.INSTANCE.compactHud = b)
+                .build());
+
+        advanced.addEntry(entryBuilder
+                .startIntSlider(
+                        Text.translatable(CONFIG_PATH+"potion_hud.comact_hud.item_size"),
+                        ModConfig.INSTANCE.potionHudItemSize,
+                        1, 10
+                )
+                .setDefaultValue(1)
+                .setSaveConsumer(i -> ModConfig.INSTANCE.potionHudItemSize = i)
+                .build());
+
         advanced.addEntry(new ButtonEntry(
                 Text.translatable(CONFIG_PATH + "potion_hud.open_editor"),
                 () -> MinecraftClient.getInstance().setScreen(new PotionHudEditScreen(MinecraftClient.getInstance().currentScreen))
         ));
-
-        combat.addEntry(entryBuilder
-                .startTextDescription(Text.translatable(CONFIG_PATH + "combat_mode.desc"))
-                .build());
-
-        combat.addEntry(entryBuilder
-                .startBooleanToggle(
-                        Text.translatable(CONFIG_PATH + "combat.toggle"),
-                        ModConfig.INSTANCE.combatMode
-                )
-                .setDefaultValue(false)
-                .setSaveConsumer(b -> ModConfig.INSTANCE.combatMode = b)
-                .build());
 
         combat.addEntry(entryBuilder
                 .startTextDescription(Text.translatable(CONFIG_PATH + "combat.sounds"))
@@ -256,7 +266,7 @@ public class ModConfigScreen {
                 .startDropdownMenu(
                         Text.translatable(translationKey),
                         DropdownMenuBuilder.TopCellElementBuilder.of(
-                                currentValue != null ? currentValue.getPath() : "",
+                                currentValue != null ? currentValue.toString() : "",
                                 s -> s
                         ),
                         soundEventDropDownBox()

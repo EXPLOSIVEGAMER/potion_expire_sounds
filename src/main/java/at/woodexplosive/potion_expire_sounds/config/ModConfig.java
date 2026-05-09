@@ -30,7 +30,6 @@ public class ModConfig {
     public boolean playExpireSound = true;
     public boolean playWarningSound = true;
     public boolean playWarningSound2 = true;
-    public boolean combatMode = false;
 
     public int warningThreshold = 200;
     public float volume_expire = 1.0f;
@@ -46,6 +45,8 @@ public class ModConfig {
 
     // Potion Hud
     public boolean displayPotionHud = true;
+    public boolean compactHud = false;
+    public int potionHudItemSize = 0;
     public int potionHudX = 0;
     public int potionHudY = 0;
 

@@ -5,7 +5,6 @@ import at.woodexplosive.potion_expire_sounds.config.ModConfig;
 import at.woodexplosive.potion_expire_sounds.config.ModConfigScreen;
 import at.woodexplosive.potion_expire_sounds.effect.PotionExpires;
 import at.woodexplosive.potion_expire_sounds.screen.PotionHud;
-import me.shedaniel.clothconfig2.api.ModifierKeyCode;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;

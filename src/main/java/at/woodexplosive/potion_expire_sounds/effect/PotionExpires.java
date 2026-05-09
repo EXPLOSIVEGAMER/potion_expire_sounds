@@ -8,6 +8,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.sound.SoundEvent;
 
@@ -41,7 +42,7 @@ public class PotionExpires implements ClientTickEvents.StartTick {
             if (currentDuration <= warningThreshold && lastDuration > warningThreshold && ModConfig.INSTANCE.playWarningSound) {
 
                 player.playSound(
-                        SoundEvent.of(ModConfig.INSTANCE.soundPotionWarning),
+                        getWarningSound(effectInstance),
                         ModConfig.INSTANCE.volume_warning,
                         ModConfig.INSTANCE.pitch_warning
                 );
@@ -49,7 +50,7 @@ public class PotionExpires implements ClientTickEvents.StartTick {
             } else if (currentDuration <= 20 && lastDuration > 20 && ModConfig.INSTANCE.playExpireSound) {
 
                 player.playSound(
-                        SoundEvent.of(ModConfig.INSTANCE.soundPotionExpire),
+                        getExpireSound(effectInstance),
                         ModConfig.INSTANCE.volume_expire,
                         ModConfig.INSTANCE.pitch_expire
                 );
@@ -58,9 +59,9 @@ public class PotionExpires implements ClientTickEvents.StartTick {
 
                 if (client.isPaused()) return;
 
-                if (currentDuration % 20 == 0){
+                if (currentDuration % 20 == 0) {
                     player.playSound(
-                            SoundEvent.of(ModConfig.INSTANCE.soundPotionWarning),
+                            getWarningSound(effectInstance),
                             ModConfig.INSTANCE.volume_warning,
                             ModConfig.INSTANCE.pitch_warning
                     );
@@ -73,5 +74,33 @@ public class PotionExpires implements ClientTickEvents.StartTick {
 
         lastDurations.keySet().removeIf(type ->
                 player.getStatusEffect(type) == null);
+    }
+
+    private SoundEvent getExpireSound(StatusEffectInstance effect) {
+
+        if (effect.getEffectType().equals(StatusEffects.STRENGTH) && ModConfig.INSTANCE.soundStrengthExpire != null)
+            return SoundEvent.of(ModConfig.INSTANCE.soundStrengthExpire);
+
+        if (effect.getEffectType().equals(StatusEffects.SPEED) && ModConfig.INSTANCE.soundSpeedExpire != null)
+            return SoundEvent.of(ModConfig.INSTANCE.soundSpeedExpire);
+
+        if (effect.getEffectType().equals(StatusEffects.FIRE_RESISTANCE) && ModConfig.INSTANCE.soundFireResExpire != null)
+            return SoundEvent.of(ModConfig.INSTANCE.soundFireResExpire);
+
+        return SoundEvent.of(ModConfig.INSTANCE.soundPotionExpire);
+    }
+
+    private SoundEvent getWarningSound(StatusEffectInstance effect) {
+
+        if (effect.getEffectType().equals(StatusEffects.STRENGTH) && ModConfig.INSTANCE.soundStrengthWarning != null)
+            return SoundEvent.of(ModConfig.INSTANCE.soundStrengthWarning);
+
+        if (effect.getEffectType().equals(StatusEffects.SPEED) && ModConfig.INSTANCE.soundSpeedWarning != null)
+            return SoundEvent.of(ModConfig.INSTANCE.soundSpeedWarning);
+
+        if (effect.getEffectType().equals(StatusEffects.FIRE_RESISTANCE) && ModConfig.INSTANCE.soundFireResWarning != null)
+                return SoundEvent.of(ModConfig.INSTANCE.soundFireResWarning);
+
+        return SoundEvent.of(ModConfig.INSTANCE.soundPotionWarning);
     }
 }
