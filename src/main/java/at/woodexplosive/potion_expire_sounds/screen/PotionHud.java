@@ -10,7 +10,6 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.hud.InGameHud;
-import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.render.RenderTickCounter;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.text.Text;
@@ -33,6 +32,8 @@ public class PotionHud implements HudElement {
 
         List<StatusEffectInstance> allEffects = sortEffects(client.player.getStatusEffects().stream()
                 .filter(e -> ModConfig.INSTANCE.showInfEffects || !e.isInfinite())
+                .filter(e -> !ModConfig.FilterType.isFilterHud()
+                        || ModConfig.INSTANCE.listType.equals(ModConfig.ListType.WHITELIST) == ModConfig.INSTANCE.effectMap.getOrDefault(e.getTranslationKey(), false))
                 .toList());
 
         if (ModConfig.INSTANCE.compactHud) {
@@ -89,7 +90,7 @@ public class PotionHud implements HudElement {
     private void renderEffect(DrawContext drawContext, StatusEffectInstance effect, int x, int y) {
         String duration = effect.getDuration() == -1 ? "∞" : TimeUtil.formatDuration(effect.getDuration());
 
-        String text = effect.getEffectType().value().getName().getString() + " " + formatAmplifier(effect.getAmplifier())
+        String text = effect.getEffectType().value().getName().getString() + formatAmplifier(effect.getAmplifier())
                 + ": " + duration;
 
         drawContext.drawGuiTexture(RenderPipelines.GUI_TEXTURED, InGameHud.getEffectTexture(effect.getEffectType()), x - 20, y - 4, 18, 18);
@@ -111,18 +112,17 @@ public class PotionHud implements HudElement {
         String out;
 
         switch (i) {
-            case 1 -> out = "I";
-            case 2 -> out = "II";
-            case 3 -> out = "III";
-            case 4 -> out = "IV";
-            case 5 -> out = "V";
-            case 6 -> out = "VI";
-            case 7 -> out = "VII";
-            case 8 -> out = "IIX";
-            case 9 -> out = "IX";
-            case 10 -> out = "X";
+            case 1 -> out = " II";
+            case 2 -> out = " III";
+            case 3 -> out = " IV";
+            case 4 -> out = " V";
+            case 5 -> out = " VI";
+            case 6 -> out = " VII";
+            case 7 -> out = " IIX";
+            case 8 -> out = " IX";
+            case 9 -> out = " X";
 
-            default -> out = String.valueOf(i);
+            default -> out = " " + (i + 1);
         }
 
         return out;

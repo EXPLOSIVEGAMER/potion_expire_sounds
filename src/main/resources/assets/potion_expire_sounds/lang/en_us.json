@@ -3,23 +3,40 @@
   "gui.potion_expire_sounds.potion_hud.element": "Hud Element",
   "gui.potion_expire_sounds.potion_hud.drag_tooltip": "Drag to move",
   "gui.potion_expire_sounds.potion_hud.close_button": "Close",
+  "gui.potion_expire_sounds.potion_hud.reset_button": "Reset",
 
   "hud.potion_expire_sounds.potion_hud.compact_hud.tooltip": "%s+ Effects",
 
   "config.potion_expire_sounds.play_warning_sound": "Play Warning Sound",
-  "config.potion_expire_sounds.play_warning_sound2": "Play Warning Sound: 2",
+  "config.potion_expire_sounds.play_warning_sound2": "Play Countdown Sound",
   "config.potion_expire_sounds.play_expire_sound": "Play Expire Sound",
   "config.potion_expire_sounds.warning_threshold": "Warning Threshold",
 
-  "config.potion_expire_sounds.volume.expire": "Volume on Expire",
-  "config.potion_expire_sounds.pitch.expire": "Pitch on Expire",
-  "config.potion_expire_sounds.volume.warning": "Volume on Warning",
-  "config.potion_expire_sounds.pitch.warning": "Pitch on Warning",
+  "config.potion_expire_sounds.volume_expire": "Volume on Expire",
+  "config.potion_expire_sounds.pitch_expire": "Pitch on Expire",
+  "config.potion_expire_sounds.volume_warning": "Volume on Warning",
+  "config.potion_expire_sounds.pitch_warning": "Pitch on Warning",
 
   "config.potion_expire_sounds.list_type": "List Type",
   "config.potion_expire_sounds.sound.potion_expire": "Sound Type on Expire",
   "config.potion_expire_sounds.sound.potion_warning": "Sound Type on Warning",
   "config.potion_expire_sounds.potion_hud.toggle": "Potion HUD",
-  "config.potion_expire_sounds.potion_hud.open_editor": "Potion Hud Editor"
-  "config.potion_expire_sounds.category.general": "General"
+  "config.potion_expire_sounds.potion_hud.open_editor": "Potion Hud Editor",
+
+  "config.potion_expire_sounds.category.general": "General",
+  "config.potion_expire_sounds.category.advanced": "Advanced",
+  "config.potion_expire_sounds.category.effects": "Effects",
+  "config.potion_expire_sounds.category.combat": "Combat",
+
+  "config.potion_expire_sounds.effect_list_desc": "Effects",
+
+  "config.potion_expire_sounds.potion_hud.desc": "Potion Hud Settings",
+  "config.potion_expire_sounds.sound.desc": "Sounds",
+  "config.potion_expire_sounds.potion_hud.compact_hud.desc": "Sound ",
+
+  "config.potion_expire_sounds.potion_hud.show_inf.toggle": "Show Infinite Effects",
+  "config.potion_expire_sounds.potion_hud.compact_hud.toggle": "Compact HUD",
+  "config.potion_expire_sounds.potion_hud.compact_hud.item_size": "Item Size"
+
+
 }

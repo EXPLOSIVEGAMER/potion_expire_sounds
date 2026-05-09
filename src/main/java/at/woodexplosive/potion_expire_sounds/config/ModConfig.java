@@ -23,6 +23,22 @@ public class ModConfig {
         WHITELIST
     }
 
+    public enum FilterType {
+        BOTH,
+        SOUND,
+        HUD;
+
+        public static boolean isFilterHud() {
+            return INSTANCE.filterType.equals(HUD)
+                    || INSTANCE.filterType.equals(BOTH);
+        }
+
+        public static boolean isFilterSound() {
+            return INSTANCE.filterType.equals(SOUND)
+                    || INSTANCE.filterType.equals(BOTH);
+        }
+    }
+
     public static ModConfig INSTANCE = new ModConfig();
     private static final Path CONFIG_PATH = FabricLoader.getInstance()
             .getConfigDir().resolve(MOD_ID+".json");
@@ -37,6 +53,8 @@ public class ModConfig {
     public float pitch_expire = 1.0f;
     public float pitch_warning = 1.0f;
 
+    // Filter
+    public FilterType filterType = FilterType.BOTH;
     public ListType listType = ListType.BLACKLIST;
     public Map<String, Boolean> effectMap = new HashMap<>();
 
@@ -47,7 +65,7 @@ public class ModConfig {
     public boolean displayPotionHud = true;
     public boolean compactHud = false;
     public boolean showInfEffects = true;
-    public int potionHudItemSize = 0;
+    public int potionHudItemSize = 1;
     public int potionHudX = 0;
     public int potionHudY = 0;
 

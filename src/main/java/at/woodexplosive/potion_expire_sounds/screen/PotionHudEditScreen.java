@@ -61,7 +61,7 @@ public class PotionHudEditScreen extends Screen {
         int y = ModConfig.INSTANCE.potionHudY;
 
         String textStrength = StatusEffects.STRENGTH.value().getName().getString() + " 10s";
-        String textSpeed = StatusEffects.SPEED.value().getName().getString() + " 120s";
+        String textSpeed = StatusEffects.SPEED.value().getName().getString() + ":  2m 20s";
         maxTextLength = Math.max(client.textRenderer.getWidth(textStrength), client.textRenderer.getWidth(textSpeed));
         int boarderY;
         if (!isAtBottom(y)) {

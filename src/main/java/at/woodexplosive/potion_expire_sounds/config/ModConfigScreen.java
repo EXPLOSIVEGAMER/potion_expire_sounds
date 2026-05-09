@@ -120,12 +120,12 @@ public class ModConfigScreen {
                 .startTextDescription(Text.translatable(CONFIG_PATH + "sound.desc"))
                 .build());
 
-        addSoundDropdown(advanced, entryBuilder,CONFIG_PATH + "sound.potion_expire",
-                ModConfig.INSTANCE.soundPotionExpire,id -> ModConfig.INSTANCE.soundPotionExpire = id);
+        addSoundDropdown(advanced, entryBuilder, CONFIG_PATH + "sound.potion_expire",
+                ModConfig.INSTANCE.soundPotionExpire, id -> ModConfig.INSTANCE.soundPotionExpire = id);
 
         addSoundDropdown(
-                advanced, entryBuilder,CONFIG_PATH + "sound.potion_warning",
-                ModConfig.INSTANCE.soundPotionWarning,id -> ModConfig.INSTANCE.soundPotionWarning = id);
+                advanced, entryBuilder, CONFIG_PATH + "sound.potion_warning",
+                ModConfig.INSTANCE.soundPotionWarning, id -> ModConfig.INSTANCE.soundPotionWarning = id);
 
         advanced.addEntry(entryBuilder
                 .startTextDescription(Text.translatable(CONFIG_PATH + "potion_hud.desc"))
@@ -141,12 +141,12 @@ public class ModConfigScreen {
                 .build());
 
         advanced.addEntry(entryBuilder
-                .startTextDescription(Text.translatable(CONFIG_PATH+"potion_hud.comact_hud.desc"))
+                .startTextDescription(Text.translatable(CONFIG_PATH + "potion_hud.compact_hud.desc"))
                 .build());
 
         advanced.addEntry(entryBuilder
                 .startBooleanToggle(
-                        Text.translatable(CONFIG_PATH+"potion_hud.show_inf.toggle"),
+                        Text.translatable(CONFIG_PATH + "potion_hud.show_inf.toggle"),
                         ModConfig.INSTANCE.showInfEffects
                 )
                 .setDefaultValue(true)
@@ -155,7 +155,7 @@ public class ModConfigScreen {
 
         advanced.addEntry(entryBuilder
                 .startBooleanToggle(
-                        Text.translatable(CONFIG_PATH+"potion_hud.compact_hud.toggle"),
+                        Text.translatable(CONFIG_PATH + "potion_hud.compact_hud.toggle"),
                         ModConfig.INSTANCE.compactHud
                 )
                 .setDefaultValue(false)
@@ -164,7 +164,7 @@ public class ModConfigScreen {
 
         advanced.addEntry(entryBuilder
                 .startIntSlider(
-                        Text.translatable(CONFIG_PATH+"potion_hud.comact_hud.item_size"),
+                        Text.translatable(CONFIG_PATH + "potion_hud.compact_hud.item_size"),
                         ModConfig.INSTANCE.potionHudItemSize,
                         1, 10
                 )
@@ -212,6 +212,10 @@ public class ModConfigScreen {
                 ModConfig.INSTANCE.soundFireResWarning, id -> ModConfig.INSTANCE.soundFireResWarning = id);
 
         effects.addEntry(entryBuilder
+                .startTextDescription(Text.translatable(CONFIG_PATH+"filter.desc"))
+                .build());
+
+        effects.addEntry(entryBuilder
                 .startEnumSelector(
                         Text.translatable(CONFIG_PATH + "list_type"),
                         ModConfig.ListType.class,
@@ -219,6 +223,16 @@ public class ModConfigScreen {
                 )
                 .setDefaultValue(ModConfig.ListType.BLACKLIST)
                 .setSaveConsumer(e -> ModConfig.INSTANCE.listType = e)
+                .build());
+
+        effects.addEntry(entryBuilder
+                .startEnumSelector(
+                        Text.translatable(CONFIG_PATH+"filter.type"),
+                        ModConfig.FilterType.class,
+                        ModConfig.INSTANCE.filterType
+                )
+                .setDefaultValue(ModConfig.FilterType.BOTH)
+                .setSaveConsumer(v -> ModConfig.INSTANCE.filterType = v)
                 .build());
 
         effects.addEntry(entryBuilder

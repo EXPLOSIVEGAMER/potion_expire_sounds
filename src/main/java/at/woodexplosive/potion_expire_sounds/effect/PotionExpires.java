@@ -33,7 +33,7 @@ public class PotionExpires implements ClientTickEvents.StartTick {
             boolean isInMap = ModConfig.INSTANCE.effectMap.getOrDefault(effectInstance.getTranslationKey(), false);
             boolean isWhiteList = ModConfig.INSTANCE.listType.equals(ModConfig.ListType.WHITELIST);
 
-            if (isWhiteList != isInMap) continue;
+            if (isWhiteList != isInMap && ModConfig.FilterType.isFilterSound()) continue;
 
             RegistryEntry<StatusEffect> type = effectInstance.getEffectType();
             int currentDuration = effectInstance.getDuration();
