@@ -46,6 +46,7 @@ public class ModConfig {
     // Potion Hud
     public boolean displayPotionHud = true;
     public boolean compactHud = false;
+    public boolean showInfEffects = true;
     public int potionHudItemSize = 0;
     public int potionHudX = 0;
     public int potionHudY = 0;

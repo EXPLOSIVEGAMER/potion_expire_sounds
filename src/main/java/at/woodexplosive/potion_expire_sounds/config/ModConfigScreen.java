@@ -146,6 +146,15 @@ public class ModConfigScreen {
 
         advanced.addEntry(entryBuilder
                 .startBooleanToggle(
+                        Text.translatable(CONFIG_PATH+"potion_hud.show_inf.toggle"),
+                        ModConfig.INSTANCE.showInfEffects
+                )
+                .setDefaultValue(true)
+                .setSaveConsumer(b -> ModConfig.INSTANCE.showInfEffects = b)
+                .build());
+
+        advanced.addEntry(entryBuilder
+                .startBooleanToggle(
                         Text.translatable(CONFIG_PATH+"potion_hud.compact_hud.toggle"),
                         ModConfig.INSTANCE.compactHud
                 )
