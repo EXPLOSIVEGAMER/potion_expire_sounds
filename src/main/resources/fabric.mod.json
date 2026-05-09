@@ -7,7 +7,7 @@
   "authors": ["WoodEXPLOSIVE", "MausDragoner431"],
   "contact": {},
   "license": "All-Rights-Reserved",
-  "icon": "assets/potion_expire_sounds/icon.png",
+  "icon": "assets/potion_expire_sounds/pes_icon.png",
   "environment": "client",
   "entrypoints": {
     "fabric-datagen": [
