@@ -1,4 +1,6 @@
 {
+  "config.potion_expire_sounds.title": "Potion Expire Sounds Config",
+
   "gui.potion_expire_sounds.potion_hud.edit_screen": "Edit Potion Hud",
   "gui.potion_expire_sounds.potion_hud.element": "Hud Element",
   "gui.potion_expire_sounds.potion_hud.drag_tooltip": "Drag to move",
@@ -28,7 +30,9 @@
   "config.potion_expire_sounds.category.effects": "Effects",
   "config.potion_expire_sounds.category.combat": "Combat",
 
-  "config.potion_expire_sounds.effect_list_desc": "Effects",
+  "config.potion_expire_sounds.effect_list.desc": "Effects",
+  "config.potion_expire_sounds.filter.desc": "Filter Settings",
+  "config.potion_expire_sounds.filter.type": "Filter Type",
 
   "config.potion_expire_sounds.potion_hud.desc": "Potion Hud Settings",
   "config.potion_expire_sounds.sound.desc": "Sounds",
@@ -36,7 +40,16 @@
 
   "config.potion_expire_sounds.potion_hud.show_inf.toggle": "Show Infinite Effects",
   "config.potion_expire_sounds.potion_hud.compact_hud.toggle": "Compact HUD",
-  "config.potion_expire_sounds.potion_hud.compact_hud.item_size": "Item Size"
+  "config.potion_expire_sounds.potion_hud.compact_hud.item_size": "Item Size",
 
-
+  "config.potion_expire_sounds.combat.sounds": "Combat Sound Settings",
+  "config.potion_expire_sounds.combat.sounds.strength": "Strength",
+  "config.potion_expire_sounds.combat.sound.strength.expire": "Expire Sound",
+  "config.potion_expire_sounds.combat.sound.strength.warning": "Warning Sound",
+  "config.potion_expire_sounds.combat.sounds.speed": "Speed",
+  "config.potion_expire_sounds.combat.sound.speed.expire": "Expire Sound",
+  "config.potion_expire_sounds.combat.sound.speed.warning": "Warning Sound",
+  "config.potion_expire_sounds.combat.sounds.fireRes": "Fire Resistance",
+  "config.potion_expire_sounds.combat.sound.fireRes.expire": "Expire Sound",
+  "config.potion_expire_sounds.combat.sound.fireRes.warning": "Warning Sound"
 }

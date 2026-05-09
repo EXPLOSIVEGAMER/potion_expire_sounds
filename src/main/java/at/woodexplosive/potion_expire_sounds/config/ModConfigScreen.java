@@ -185,30 +185,30 @@ public class ModConfigScreen {
                 .startTextDescription(Text.translatable(CONFIG_PATH + "combat.sounds.strength"))
                 .build());
 
-        addSoundDropdown(combat, entryBuilder, CONFIG_PATH + "comabat.sound.strength.expire",
+        addSoundDropdown(combat, entryBuilder, CONFIG_PATH + "combat.sound.strength.expire",
                 ModConfig.INSTANCE.soundStrengthExpire, id -> ModConfig.INSTANCE.soundStrengthExpire = id);
 
-        addSoundDropdown(combat, entryBuilder, CONFIG_PATH + "comabat.sound.strength.warning",
+        addSoundDropdown(combat, entryBuilder, CONFIG_PATH + "combat.sound.strength.warning",
                 ModConfig.INSTANCE.soundStrengthWarning, id -> ModConfig.INSTANCE.soundStrengthWarning = id);
 
         combat.addEntry(entryBuilder
                 .startTextDescription(Text.translatable(CONFIG_PATH + "combat.sounds.speed"))
                 .build());
 
-        addSoundDropdown(combat, entryBuilder, CONFIG_PATH + "comabat.sound.speed.expire",
+        addSoundDropdown(combat, entryBuilder, CONFIG_PATH + "combat.sound.speed.expire",
                 ModConfig.INSTANCE.soundSpeedExpire, id -> ModConfig.INSTANCE.soundSpeedExpire = id);
 
-        addSoundDropdown(combat, entryBuilder, CONFIG_PATH + "comabat.sound.speed.warning",
+        addSoundDropdown(combat, entryBuilder, CONFIG_PATH + "combat.sound.speed.warning",
                 ModConfig.INSTANCE.soundSpeedWarning, id -> ModConfig.INSTANCE.soundSpeedWarning = id);
 
         combat.addEntry(entryBuilder
                 .startTextDescription(Text.translatable(CONFIG_PATH + "combat.sounds.fireRes"))
                 .build());
 
-        addSoundDropdown(combat, entryBuilder, CONFIG_PATH + "comabat.sound.fireRes.expire",
+        addSoundDropdown(combat, entryBuilder, CONFIG_PATH + "combat.sound.fireRes.expire",
                 ModConfig.INSTANCE.soundFireResExpire, id -> ModConfig.INSTANCE.soundFireResExpire = id);
 
-        addSoundDropdown(combat, entryBuilder, CONFIG_PATH + "comabat.sound.fireRes.warning",
+        addSoundDropdown(combat, entryBuilder, CONFIG_PATH + "combat.sound.fireRes.warning",
                 ModConfig.INSTANCE.soundFireResWarning, id -> ModConfig.INSTANCE.soundFireResWarning = id);
 
         effects.addEntry(entryBuilder
@@ -237,7 +237,7 @@ public class ModConfigScreen {
 
         effects.addEntry(entryBuilder
                 .startTextDescription(
-                        Text.translatable(CONFIG_PATH + "effect_list_desc")
+                        Text.translatable(CONFIG_PATH + "effect_list.desc")
                 )
                 .build());
 
