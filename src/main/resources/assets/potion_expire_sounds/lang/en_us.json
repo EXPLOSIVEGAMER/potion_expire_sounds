@@ -21,4 +21,5 @@
   "config.potion_expire_sounds.sound.potion_warning": "Sound Type on Warning",
   "config.potion_expire_sounds.potion_hud.toggle": "Potion HUD",
   "config.potion_expire_sounds.potion_hud.open_editor": "Potion Hud Editor"
+  "config.potion_expire_sounds.category.general": "General"
 }
