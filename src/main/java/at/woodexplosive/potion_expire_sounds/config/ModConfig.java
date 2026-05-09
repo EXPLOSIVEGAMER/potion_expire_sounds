@@ -30,13 +30,17 @@ public class ModConfig {
     public boolean playExpireSound = true;
     public boolean playWarningSound = true;
     public boolean playWarningSound2 = true;
+    public boolean combatMode = false;
+
     public int warningThreshold = 200;
     public float volume_expire = 1.0f;
     public float volume_warning = 1.0f;
     public float pitch_expire = 1.0f;
     public float pitch_warning = 1.0f;
+
     public ListType listType = ListType.BLACKLIST;
     public Map<String, Boolean> effectMap = new HashMap<>();
+
     public Identifier soundPotionExpire = ModSounds.POTION_EXPIRE.id();
     public Identifier soundPotionWarning = ModSounds.POTION_WARNING.id();
 
@@ -44,6 +48,14 @@ public class ModConfig {
     public boolean displayPotionHud = true;
     public int potionHudX = 0;
     public int potionHudY = 0;
+
+    // Combat Mode
+    public Identifier soundStrengthExpire = null;
+    public Identifier soundStrengthWarning = null;
+    public Identifier soundSpeedExpire = null;
+    public Identifier soundSpeedWarning = null;
+    public Identifier soundFireResExpire = null;
+    public Identifier soundFireResWarning = null;
 
     public static void load() {
         if (Files.exists(CONFIG_PATH)) {

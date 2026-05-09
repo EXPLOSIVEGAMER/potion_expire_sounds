@@ -1,6 +1,5 @@
 package at.woodexplosive.potion_expire_sounds.screen;
 
-import at.woodexplosive.potion_expire_sounds.PotionExpireSounds;
 import at.woodexplosive.potion_expire_sounds.config.ModConfig;
 import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.gui.Click;
@@ -10,8 +9,6 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.text.Text;
-
-import java.awt.*;
 
 import static at.woodexplosive.potion_expire_sounds.PotionExpireSounds.MOD_ID;
 
@@ -36,9 +33,7 @@ public class PotionHudEditScreen extends Screen {
 
         ButtonWidget closeButton = ButtonWidget.builder(
                         Text.translatable(TRANSLATION_PATH + "close_button"),
-                        btn -> {
-                            this.close();
-                        }
+                        btn -> this.close()
                 )
                 .dimensions(this.width / 2 - 100, this.height - 30, 200, 20)
                 .build();

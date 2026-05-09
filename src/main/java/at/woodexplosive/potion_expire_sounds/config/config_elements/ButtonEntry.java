@@ -22,21 +22,6 @@ public class ButtonEntry extends AbstractConfigListEntry<Object> {
     }
 
     @Override
-    public boolean isRequiresRestart() {
-        return false;
-    }
-
-    @Override
-    public void setRequiresRestart(boolean b) {
-
-    }
-
-    @Override
-    public Text getFieldName() {
-        return Text.empty();
-    }
-
-    @Override
     public Optional<Object> getDefaultValue() {
         return Optional.empty();
     }

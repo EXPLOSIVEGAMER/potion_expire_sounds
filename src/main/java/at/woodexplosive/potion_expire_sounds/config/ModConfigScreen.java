@@ -2,19 +2,21 @@ package at.woodexplosive.potion_expire_sounds.config;
 
 import at.woodexplosive.potion_expire_sounds.config.config_elements.ButtonEntry;
 import at.woodexplosive.potion_expire_sounds.screen.PotionHudEditScreen;
-import at.woodexplosive.potion_expire_sounds.sound.ModSounds;
 import me.shedaniel.clothconfig2.api.*;
+import me.shedaniel.clothconfig2.gui.entries.DropdownBoxEntry;
+import me.shedaniel.clothconfig2.impl.builders.DropdownMenuBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.font.TextRenderer;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.registry.Registries;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 import static at.woodexplosive.potion_expire_sounds.PotionExpireSounds.MOD_ID;
 
@@ -22,10 +24,8 @@ import static at.woodexplosive.potion_expire_sounds.PotionExpireSounds.MOD_ID;
 public class ModConfigScreen {
 
     private static final String CONFIG_PATH = "config." + MOD_ID + ".";
-    private static final List<String> allEffectIds = Registries.STATUS_EFFECT.getIds()
-            .stream().map(Identifier::toString).sorted().toList();
     private static final List<String> allSoundEventIds = Registries.SOUND_EVENT.getIds()
-            .stream().map(Identifier::toString).sorted().toList();
+            .stream().map(Identifier::getPath).toList();
 
     public static Screen createScreen(Screen parent) {
         ConfigBuilder builder = ConfigBuilder.create()
@@ -44,6 +44,10 @@ public class ModConfigScreen {
 
         ConfigCategory advanced = builder.getOrCreateCategory(
                 Text.translatable(CONFIG_PATH + "category.advanced")
+        );
+
+        ConfigCategory combat = builder.getOrCreateCategory(
+                Text.translatable(CONFIG_PATH + "category.combat")
         );
 
         general.addEntry(entryBuilder
@@ -112,6 +116,82 @@ public class ModConfigScreen {
                 .setSaveConsumer(i -> ModConfig.INSTANCE.pitch_warning = (float) i / 100)
                 .build());
 
+        advanced.addEntry(entryBuilder
+                .startTextDescription(Text.translatable(CONFIG_PATH + "sound.desc"))
+                .build());
+
+        addSoundDropdown(advanced, entryBuilder,CONFIG_PATH + "sound.potion_expire",
+                ModConfig.INSTANCE.soundPotionExpire,id -> ModConfig.INSTANCE.soundPotionExpire = id);
+
+        addSoundDropdown(
+                advanced, entryBuilder,CONFIG_PATH + "sound.potion_warning",
+                ModConfig.INSTANCE.soundPotionWarning,id -> ModConfig.INSTANCE.soundPotionWarning = id);
+
+        advanced.addEntry(entryBuilder
+                .startTextDescription(Text.translatable(CONFIG_PATH + "potion_hud.desc"))
+                .build());
+
+        advanced.addEntry(entryBuilder
+                .startBooleanToggle(
+                        Text.translatable(CONFIG_PATH + "potion_hud.toggle"),
+                        ModConfig.INSTANCE.displayPotionHud
+                )
+                .setDefaultValue(true)
+                .setSaveConsumer(b -> ModConfig.INSTANCE.displayPotionHud = b)
+                .build());
+
+        advanced.addEntry(new ButtonEntry(
+                Text.translatable(CONFIG_PATH + "potion_hud.open_editor"),
+                () -> MinecraftClient.getInstance().setScreen(new PotionHudEditScreen(MinecraftClient.getInstance().currentScreen))
+        ));
+
+        combat.addEntry(entryBuilder
+                .startTextDescription(Text.translatable(CONFIG_PATH + "combat_mode.desc"))
+                .build());
+
+        combat.addEntry(entryBuilder
+                .startBooleanToggle(
+                        Text.translatable(CONFIG_PATH + "combat.toggle"),
+                        ModConfig.INSTANCE.combatMode
+                )
+                .setDefaultValue(false)
+                .setSaveConsumer(b -> ModConfig.INSTANCE.combatMode = b)
+                .build());
+
+        combat.addEntry(entryBuilder
+                .startTextDescription(Text.translatable(CONFIG_PATH + "combat.sounds"))
+                .build());
+
+        combat.addEntry(entryBuilder
+                .startTextDescription(Text.translatable(CONFIG_PATH + "combat.sounds.strength"))
+                .build());
+
+        addSoundDropdown(combat, entryBuilder, CONFIG_PATH + "comabat.sound.strength.expire",
+                ModConfig.INSTANCE.soundStrengthExpire, id -> ModConfig.INSTANCE.soundStrengthExpire = id);
+
+        addSoundDropdown(combat, entryBuilder, CONFIG_PATH + "comabat.sound.strength.warning",
+                ModConfig.INSTANCE.soundStrengthWarning, id -> ModConfig.INSTANCE.soundStrengthWarning = id);
+
+        combat.addEntry(entryBuilder
+                .startTextDescription(Text.translatable(CONFIG_PATH + "combat.sounds.speed"))
+                .build());
+
+        addSoundDropdown(combat, entryBuilder, CONFIG_PATH + "comabat.sound.speed.expire",
+                ModConfig.INSTANCE.soundSpeedExpire, id -> ModConfig.INSTANCE.soundSpeedExpire = id);
+
+        addSoundDropdown(combat, entryBuilder, CONFIG_PATH + "comabat.sound.speed.warning",
+                ModConfig.INSTANCE.soundSpeedWarning, id -> ModConfig.INSTANCE.soundSpeedWarning = id);
+
+        combat.addEntry(entryBuilder
+                .startTextDescription(Text.translatable(CONFIG_PATH + "combat.sounds.fireRes"))
+                .build());
+
+        addSoundDropdown(combat, entryBuilder, CONFIG_PATH + "comabat.sound.fireRes.expire",
+                ModConfig.INSTANCE.soundFireResExpire, id -> ModConfig.INSTANCE.soundFireResExpire = id);
+
+        addSoundDropdown(combat, entryBuilder, CONFIG_PATH + "comabat.sound.fireRes.warning",
+                ModConfig.INSTANCE.soundFireResWarning, id -> ModConfig.INSTANCE.soundFireResWarning = id);
+
         effects.addEntry(entryBuilder
                 .startEnumSelector(
                         Text.translatable(CONFIG_PATH + "list_type"),
@@ -122,42 +202,11 @@ public class ModConfigScreen {
                 .setSaveConsumer(e -> ModConfig.INSTANCE.listType = e)
                 .build());
 
-        advanced.addEntry(entryBuilder
-                .startStringDropdownMenu(
-                        Text.translatable(CONFIG_PATH + "sound_potion_expire"),
-                        ModConfig.INSTANCE.soundPotionExpire.toString(),
-                        Text::of
+        effects.addEntry(entryBuilder
+                .startTextDescription(
+                        Text.translatable(CONFIG_PATH + "effect_list_desc")
                 )
-                .setDefaultValue(ModSounds.POTION_EXPIRE.id().toString())
-                .setSelections(allSoundEventIds)
-                .setSaveConsumer(s -> ModConfig.INSTANCE.soundPotionExpire = Identifier.of(s))
                 .build());
-
-        advanced.addEntry(entryBuilder
-                .startStringDropdownMenu(
-                        Text.translatable(CONFIG_PATH + "sound_potion_warning"),
-                        ModConfig.INSTANCE.soundPotionWarning.toString(),
-                        Text::of
-                )
-                .setDefaultValue(ModSounds.POTION_WARNING.id().toString())
-                .setSelections(allSoundEventIds)
-                .setSaveConsumer(s -> ModConfig.INSTANCE.soundPotionWarning = Identifier.of(s))
-                .build());
-
-
-        advanced.addEntry(entryBuilder
-                .startBooleanToggle(
-                        Text.translatable(CONFIG_PATH + "toggle_potion_hud"),
-                        ModConfig.INSTANCE.displayPotionHud
-                )
-                .setDefaultValue(true)
-                .setSaveConsumer(b -> ModConfig.INSTANCE.displayPotionHud = b)
-                .build());
-
-        advanced.addEntry(new ButtonEntry(
-                Text.translatable(CONFIG_PATH + "open_potion_hud_editor"),
-                () -> MinecraftClient.getInstance().setScreen(new PotionHudEditScreen(MinecraftClient.getInstance().currentScreen))
-        ));
 
         for (Identifier effect : Registries.STATUS_EFFECT.getIds()) {
             effects.addEntry(entryBuilder
@@ -170,6 +219,52 @@ public class ModConfigScreen {
                     .build());
         }
 
+        builder.setSavingRunnable(ModConfig::save);
+
         return builder.build();
+    }
+
+    private static DropdownBoxEntry.DefaultSelectionCellCreator<String> soundEventDropDownBox() {
+        return new DropdownBoxEntry.DefaultSelectionCellCreator<>() {
+            @Override
+            public DropdownBoxEntry.SelectionCellElement<String> create(String selection) {
+                return new DropdownBoxEntry.DefaultSelectionCellElement<>(selection, this.toTextFunction) {
+                    @Override
+                    public void render(DrawContext graphics, int mouseX, int mouseY, int x, int y, int width, int height, float delta) {
+                        this.rendering = true;
+                        this.x = x;
+                        this.y = y;
+                        this.width = width;
+                        this.height = height;
+                        boolean b = mouseX >= x && mouseX <= x + width && mouseY >= y && mouseY <= y + height;
+                        TextRenderer textRenderer = MinecraftClient.getInstance().textRenderer;
+
+                        if (b) {
+                            graphics.fill(x + 1, y + 1, x + width - 1, y + height - 1, -15132391);
+                            graphics.drawTooltip(textRenderer, Text.literal(this.r), mouseX, mouseY);
+                        }
+
+                        graphics.drawTextWithShadow(textRenderer, this.toTextFunction.apply(this.r).asOrderedText(), x + 6, y + 4, b ? -1 : -7829368);
+                    }
+                };
+            }
+        };
+    }
+
+    private static void addSoundDropdown(ConfigCategory category, ConfigEntryBuilder entryBuilder, String translationKey, Identifier currentValue, Consumer<Identifier> saveConsumer) {
+        category.addEntry(entryBuilder
+                .startDropdownMenu(
+                        Text.translatable(translationKey),
+                        DropdownMenuBuilder.TopCellElementBuilder.of(
+                                currentValue != null ? currentValue.getPath() : "",
+                                s -> s
+                        ),
+                        soundEventDropDownBox()
+                )
+                .setDefaultValue("")
+                .setSelections(allSoundEventIds)
+                .setSaveConsumer(s -> saveConsumer.accept(s.isEmpty() ? null : Identifier.of(s)))
+                .build()
+        );
     }
 }

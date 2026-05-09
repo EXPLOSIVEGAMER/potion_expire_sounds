@@ -15,8 +15,8 @@
   "config.potion_expire_sounds.pitch.warning": "Pitch on Warning",
 
   "config.potion_expire_sounds.list_type": "List Type",
-  "config.potion_expire_sounds.sound_potion_expire": "Sound Type on Expire",
-  "config.potion_expire_sounds.sound_potion_warning": "Sound Type on Warning",
-  "config.potion_expire_sounds.toggle_potion_hud": "HUD",
-  "config.potion_expire_sounds.open_potion_hud_editor": "Hud Editor"
+  "config.potion_expire_sounds.sound.potion_expire": "Sound Type on Expire",
+  "config.potion_expire_sounds.sound.potion_warning": "Sound Type on Warning",
+  "config.potion_expire_sounds.potion_hud.toggle": "Potion HUD",
+  "config.potion_expire_sounds.potion_hud.open_editor": "Potion Hud Editor"
 }
