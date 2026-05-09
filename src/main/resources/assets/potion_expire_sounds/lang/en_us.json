@@ -35,8 +35,8 @@
   "config.potion_expire_sounds.filter.type": "Filter Type",
 
   "config.potion_expire_sounds.potion_hud.desc": "Potion Hud Settings",
-  "config.potion_expire_sounds.sound.desc": "Sounds",
-  "config.potion_expire_sounds.potion_hud.compact_hud.desc": "Sound ",
+  "config.potion_expire_sounds.sound.desc": "Sounds Settings",
+  "config.potion_expire_sounds.potion_hud.compact_hud.desc": "Compact Potion Hud Settings",
 
   "config.potion_expire_sounds.potion_hud.show_inf.toggle": "Show Infinite Effects",
   "config.potion_expire_sounds.potion_hud.compact_hud.toggle": "Compact HUD",

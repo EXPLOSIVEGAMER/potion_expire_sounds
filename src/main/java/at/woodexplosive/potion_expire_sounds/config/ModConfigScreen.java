@@ -81,6 +81,10 @@ public class ModConfigScreen {
                 .build());
 
         advanced.addEntry(entryBuilder
+                .startTextDescription(Text.translatable(CONFIG_PATH + "sound.desc"))
+                .build());
+
+        advanced.addEntry(entryBuilder
                 .startIntSlider(
                         Text.translatable(CONFIG_PATH + "volume_expire"),
                         (int) ModConfig.INSTANCE.volume_expire * 100, 0, 100
@@ -116,10 +120,6 @@ public class ModConfigScreen {
                 .setSaveConsumer(i -> ModConfig.INSTANCE.pitch_warning = (float) i / 100)
                 .build());
 
-        advanced.addEntry(entryBuilder
-                .startTextDescription(Text.translatable(CONFIG_PATH + "sound.desc"))
-                .build());
-
         addSoundDropdown(advanced, entryBuilder, CONFIG_PATH + "sound.potion_expire",
                 ModConfig.INSTANCE.soundPotionExpire, id -> ModConfig.INSTANCE.soundPotionExpire = id);
 
@@ -141,16 +141,21 @@ public class ModConfigScreen {
                 .build());
 
         advanced.addEntry(entryBuilder
-                .startTextDescription(Text.translatable(CONFIG_PATH + "potion_hud.compact_hud.desc"))
-                .build());
-
-        advanced.addEntry(entryBuilder
                 .startBooleanToggle(
                         Text.translatable(CONFIG_PATH + "potion_hud.show_inf.toggle"),
                         ModConfig.INSTANCE.showInfEffects
                 )
                 .setDefaultValue(true)
                 .setSaveConsumer(b -> ModConfig.INSTANCE.showInfEffects = b)
+                .build());
+
+        advanced.addEntry(new ButtonEntry(
+                Text.translatable(CONFIG_PATH + "potion_hud.open_editor"),
+                () -> MinecraftClient.getInstance().setScreen(new PotionHudEditScreen(MinecraftClient.getInstance().currentScreen))
+        ));
+
+        advanced.addEntry(entryBuilder
+                .startTextDescription(Text.translatable(CONFIG_PATH + "potion_hud.compact_hud.desc"))
                 .build());
 
         advanced.addEntry(entryBuilder
@@ -171,11 +176,6 @@ public class ModConfigScreen {
                 .setDefaultValue(1)
                 .setSaveConsumer(i -> ModConfig.INSTANCE.potionHudItemSize = i)
                 .build());
-
-        advanced.addEntry(new ButtonEntry(
-                Text.translatable(CONFIG_PATH + "potion_hud.open_editor"),
-                () -> MinecraftClient.getInstance().setScreen(new PotionHudEditScreen(MinecraftClient.getInstance().currentScreen))
-        ));
 
         combat.addEntry(entryBuilder
                 .startTextDescription(Text.translatable(CONFIG_PATH + "combat.sounds"))
