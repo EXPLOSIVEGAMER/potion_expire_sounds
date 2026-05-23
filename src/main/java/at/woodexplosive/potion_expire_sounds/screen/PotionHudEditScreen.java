@@ -16,11 +16,12 @@ public class PotionHudEditScreen extends Screen {
 
     private static final String TRANSLATION_PATH = "gui." + MOD_ID + ".potion_hud.";
 
-    private int dragOffsetX, dragOffsetY;
-    private boolean dragging = false;
     private final Screen parent;
+    private final int boxWidth = 120;
+    private final int boxHeight = 40;
 
-    private int maxTextLength = 10;
+    private int x, y, dragOffsetX, dragOffsetY;
+    private boolean dragging = false;
 
     public PotionHudEditScreen(Screen parent) {
         super(Text.translatable(TRANSLATION_PATH + "edit_screen"));
@@ -30,6 +31,7 @@ public class PotionHudEditScreen extends Screen {
     @Override
     public void init() {
         super.init();
+        this.fromConfig();
 
         ButtonWidget closeButton = ButtonWidget.builder(
                         Text.translatable(TRANSLATION_PATH + "close_button"),
@@ -41,10 +43,9 @@ public class PotionHudEditScreen extends Screen {
         ButtonWidget resetButton = ButtonWidget.builder(
                         Text.translatable(TRANSLATION_PATH + "reset_button"),
                         btn -> {
-                            ModConfig.INSTANCE.potionHudX = width / 2;
-                            ModConfig.INSTANCE.potionHudY = height / 2;
-                            this.close();
-                            this.client.setScreen(new PotionHudEditScreen(parent));
+                            this.x = 10;
+                            this.y = 10;
+                            this.toConfig();
                         }
                 ).dimensions(this.width / 2 - 110, this.height - 30, 100, 20)
                 .build();
@@ -57,49 +58,31 @@ public class PotionHudEditScreen extends Screen {
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
         super.render(context, mouseX, mouseY, delta);
 
-        int x = ModConfig.INSTANCE.potionHudX;
-        int y = ModConfig.INSTANCE.potionHudY;
-
         String textStrength = StatusEffects.STRENGTH.value().getName().getString() + " 10s";
         String textSpeed = StatusEffects.SPEED.value().getName().getString() + ":  2m 20s";
-        maxTextLength = Math.max(client.textRenderer.getWidth(textStrength), client.textRenderer.getWidth(textSpeed));
-        int boarderY;
-        if (!isAtBottom(y)) {
-            boarderY = y;
-        } else {
-            boarderY = correctedY(y);
-        }
 
-        drawBoarder(context, x - 24, boarderY - 6, x + maxTextLength + 4, boarderY + 34, 0xFFAAAAAA);
+        context.getMatrices().pushMatrix();
+        context.getMatrices().translate(x, y);
 
-        context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, InGameHud.getEffectTexture(StatusEffects.STRENGTH), x - 20, y - 4, 18, 18);
-        context.drawText(client.textRenderer, textStrength, x, y, 0xFFFFFFFF, true);
-        y = correctedY(y);
-        context.drawText(client.textRenderer, textSpeed, x, y, 0xFFFFFFFF, true);
-        context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, InGameHud.getEffectTexture(StatusEffects.SPEED), x - 20, y - 4, 18, 18);
+        drawBoarder(context, 0, 0, boxWidth, boxHeight, 0xFFAAAAAA);
 
-        context.drawCenteredTextWithShadow(
-                this.textRenderer,
-                Text.translatable(TRANSLATION_PATH + "drag_tooltip"),
-                this.width / 2,
-                this.height / 2,
-                0xAAAAAAAA
-        );
+        // Strength display
+        context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, InGameHud.getEffectTexture(StatusEffects.STRENGTH), 4, 2, 18, 18);
+        context.drawText(client.textRenderer, textStrength, 26, 6, 0xFFFFFFFF, true);
+
+        // Speed display
+        context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, InGameHud.getEffectTexture(StatusEffects.SPEED), 4, 20, 18, 18);
+        context.drawText(client.textRenderer, textSpeed, 26, 24, 0xFFFFFFFF, true);
+
+        context.getMatrices().popMatrix();
+
+        // Drag Tooltip
+        context.drawCenteredTextWithShadow(this.textRenderer, Text.translatable(TRANSLATION_PATH + "drag_tooltip"), this.width / 2, this.height / 2, 0xAAAAAAAA);
     }
 
     @Override
     public boolean mouseClicked(Click click, boolean doubled) {
-        int x = ModConfig.INSTANCE.potionHudX;
-        int y = ModConfig.INSTANCE.potionHudY;
-
-        int boarderY;
-        if (!isAtBottom(y)) {
-            boarderY = y;
-        } else {
-            boarderY = correctedY(y);
-        }
-
-        if (click.x() >= x - 24 && click.x() <= x + maxTextLength + 4 && click.y() >= boarderY - 6 && click.y() <= boarderY + 34) {
+        if (click.x() >= x && click.x() <= x + boxWidth && click.y() >= y && click.y() <= y + boxHeight) {
             dragging = true;
             dragOffsetX = (int) click.x() - x;
             dragOffsetY = (int) click.y() - y;
@@ -111,8 +94,14 @@ public class PotionHudEditScreen extends Screen {
     @Override
     public boolean mouseDragged(Click click, double offsetX, double offsetY) {
         if (dragging) {
-            ModConfig.INSTANCE.potionHudX = (int) click.x() - dragOffsetX;
-            ModConfig.INSTANCE.potionHudY = (int) click.y() - dragOffsetY;
+            
+            int targetX = (int) click.x() - dragOffsetX;
+            int targetY = (int) click.y() - dragOffsetY;
+
+            this.x = Math.clamp(targetX, 0, client.getWindow().getScaledWidth() - boxWidth);
+            this.y = Math.clamp(targetY, 0, client.getWindow().getScaledHeight() - boxHeight);
+
+            this.toConfig();
             return true;
         }
         return super.mouseDragged(click, offsetX, offsetY);
@@ -126,17 +115,10 @@ public class PotionHudEditScreen extends Screen {
 
     @Override
     public void close() {
+        this.toConfig();
         ModConfig.save();
         if (parent instanceof PotionHudEditScreen) super.close();
         this.client.setScreen(parent);
-    }
-
-    private boolean isAtBottom(int y) {
-        return y > client.getWindow().getScaledHeight() / 2;
-    }
-
-    private int correctedY(int y) {
-        return isAtBottom(y) ? y - 18 : y + 18;
     }
 
     private void drawBoarder(DrawContext context, int x, int y, int x2, int y2, int color) {
@@ -144,5 +126,15 @@ public class PotionHudEditScreen extends Screen {
         context.drawHorizontalLine(x, x2, y2, color);
         context.drawVerticalLine(x, y, y2, color);
         context.drawVerticalLine(x2, y, y2, color);
+    }
+
+    private void fromConfig() {
+        x = (int) (ModConfig.INSTANCE.potionHudX * client.getWindow().getScaledWidth());
+        y = (int) (ModConfig.INSTANCE.potionHudY * client.getWindow().getScaledHeight());
+    }
+
+    private void toConfig() {
+        ModConfig.INSTANCE.potionHudX = (float) this.x / client.getWindow().getScaledWidth();
+        ModConfig.INSTANCE.potionHudY = (float) this.y / client.getWindow().getScaledHeight();
     }
 }

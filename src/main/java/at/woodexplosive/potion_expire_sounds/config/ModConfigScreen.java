@@ -1,5 +1,6 @@
 package at.woodexplosive.potion_expire_sounds.config;
 
+import at.woodexplosive.potion_expire_sounds.config.custom.SoundControllerBuilder;
 import at.woodexplosive.potion_expire_sounds.screen.PotionHudEditScreen;
 import dev.isxander.yacl3.api.*;
 import dev.isxander.yacl3.api.controller.*;
@@ -11,12 +12,21 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.registry.Registries;
 
+import java.util.List;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
+import java.util.stream.Stream;
+
 import static at.woodexplosive.potion_expire_sounds.PotionExpireSounds.MOD_ID;
 
 @Environment(EnvType.CLIENT)
 public class ModConfigScreen {
 
     private static final String CONFIG_PATH = "config." + MOD_ID + ".";
+    private static final List<String> allSoundEventIds = Stream.concat(
+            Stream.of(""),
+            Registries.SOUND_EVENT.getIds().stream().map(Identifier::toString)
+                    .sorted()).toList();
 
     public static Screen createScreen(Screen parent) {
         return YetAnotherConfigLib.createBuilder()
@@ -64,28 +74,28 @@ public class ModConfigScreen {
                         .name(Text.translatable(CONFIG_PATH + "sound.desc"))
                         .option(Option.<Float>createBuilder()
                                 .name(Text.translatable(CONFIG_PATH + "volume_expire"))
-                                .binding(1.0f, () -> ModConfig.INSTANCE.volume_expire, v -> ModConfig.INSTANCE.volume_expire = v)
+                                .binding(1.0f, () -> ModConfig.INSTANCE.volumeExpire, v -> ModConfig.INSTANCE.volumeExpire = v)
                                 .controller(opt -> FloatSliderControllerBuilder.create(opt).range(0f, 1f).step(0.01f))
                                 .build())
                         .option(Option.<Float>createBuilder()
                                 .name(Text.translatable(CONFIG_PATH + "pitch_expire"))
-                                .binding(1.0f, () -> ModConfig.INSTANCE.pitch_expire, v -> ModConfig.INSTANCE.pitch_expire = v)
+                                .binding(1.0f, () -> ModConfig.INSTANCE.pitchExpire, v -> ModConfig.INSTANCE.pitchExpire = v)
                                 .controller(opt -> FloatSliderControllerBuilder.create(opt).range(0f, 2f).step(0.01f))
                                 .build())
                         .option(Option.<Float>createBuilder()
                                 .name(Text.translatable(CONFIG_PATH + "volume_warning"))
-                                .binding(1.0f, () -> ModConfig.INSTANCE.volume_warning, v -> ModConfig.INSTANCE.volume_warning = v)
+                                .binding(1.0f, () -> ModConfig.INSTANCE.volumeWarning, v -> ModConfig.INSTANCE.volumeWarning = v)
                                 .controller(opt -> FloatSliderControllerBuilder.create(opt).range(0f, 1f).step(0.01f))
                                 .build())
                         .option(Option.<Float>createBuilder()
                                 .name(Text.translatable(CONFIG_PATH + "pitch_warning"))
-                                .binding(1.0f, () -> ModConfig.INSTANCE.pitch_warning, v -> ModConfig.INSTANCE.pitch_warning = v)
+                                .binding(1.0f, () -> ModConfig.INSTANCE.pitchWarning, v -> ModConfig.INSTANCE.pitchWarning = v)
                                 .controller(opt -> FloatSliderControllerBuilder.create(opt).range(0f, 2f).step(0.01f))
                                 .build())
                         .option(buildSoundOption(CONFIG_PATH + "sound.potion_expire",
-                                () -> ModConfig.INSTANCE.soundPotionExpire, v -> ModConfig.INSTANCE.soundPotionExpire = v))
+                                () -> ModConfig.INSTANCE.soundPotionExpire, v -> ModConfig.INSTANCE.soundPotionExpire = v, ""))
                         .option(buildSoundOption(CONFIG_PATH + "sound.potion_warning",
-                                () -> ModConfig.INSTANCE.soundPotionWarning, v -> ModConfig.INSTANCE.soundPotionWarning = v))
+                                () -> ModConfig.INSTANCE.soundPotionWarning, v -> ModConfig.INSTANCE.soundPotionWarning = v, ""))
                         .build())
                 // Potion HUD Settings
                 .group(OptionGroup.createBuilder()
@@ -159,34 +169,95 @@ public class ModConfigScreen {
                 .group(OptionGroup.createBuilder()
                         .name(Text.translatable(CONFIG_PATH + "combat.sounds.strength"))
                         .option(buildSoundOption(CONFIG_PATH + "combat.sound.strength.expire",
-                                () -> ModConfig.INSTANCE.soundStrengthExpire, v -> ModConfig.INSTANCE.soundStrengthExpire = v))
+                                () -> ModConfig.INSTANCE.soundStrengthExpire, v -> ModConfig.INSTANCE.soundStrengthExpire = v, ""))
                         .option(buildSoundOption(CONFIG_PATH + "combat.sound.strength.warning",
-                                () -> ModConfig.INSTANCE.soundStrengthWarning, v -> ModConfig.INSTANCE.soundStrengthWarning = v))
+                                () -> ModConfig.INSTANCE.soundStrengthWarning, v -> ModConfig.INSTANCE.soundStrengthWarning = v, ""))
+                        .option(Option.<Float>createBuilder()
+                                .name(Text.translatable(CONFIG_PATH + "combat.sound.strength.expire.volume"))
+                                .binding(1.0F, () -> ModConfig.INSTANCE.soundStrengthExpireVolume, v -> ModConfig.INSTANCE.soundStrengthExpireVolume = v)
+                                .controller(opt -> FloatSliderControllerBuilder.create(opt).range(0f, 1f).step(0.01f))
+                                .build())
+                        .option(Option.<Float>createBuilder()
+                                .name(Text.translatable(CONFIG_PATH + "combat.sound.strength.expire.pitch"))
+                                .binding(1.0F, () -> ModConfig.INSTANCE.soundStrengthExpirePitch, v -> ModConfig.INSTANCE.soundStrengthExpirePitch = v)
+                                .controller(opt -> FloatSliderControllerBuilder.create(opt).range(0f, 2f).step(0.01f))
+                                .build())
+                        .option(Option.<Float>createBuilder()
+                                .name(Text.translatable(CONFIG_PATH + "combat.sound.strength.warning.volume"))
+                                .binding(1.0F, () -> ModConfig.INSTANCE.soundStrengthWarningVolume, v -> ModConfig.INSTANCE.soundStrengthWarningVolume = v)
+                                .controller(opt -> FloatSliderControllerBuilder.create(opt).range(0f, 1f).step(0.01f))
+                                .build())
+                        .option(Option.<Float>createBuilder()
+                                .name(Text.translatable(CONFIG_PATH + "combat.sound.strength.warning.pitch"))
+                                .binding(1.0F, () -> ModConfig.INSTANCE.soundStrengthWarningPitch, v -> ModConfig.INSTANCE.soundStrengthWarningPitch = v)
+                                .controller(opt -> FloatSliderControllerBuilder.create(opt).range(0f, 2f).step(0.01f))
+                                .build())
                         .build())
                 .group(OptionGroup.createBuilder()
                         .name(Text.translatable(CONFIG_PATH + "combat.sounds.speed"))
                         .option(buildSoundOption(CONFIG_PATH + "combat.sound.speed.expire",
-                                () -> ModConfig.INSTANCE.soundSpeedExpire, v -> ModConfig.INSTANCE.soundSpeedExpire = v))
+                                () -> ModConfig.INSTANCE.soundSpeedExpire, v -> ModConfig.INSTANCE.soundSpeedExpire = v, ""))
                         .option(buildSoundOption(CONFIG_PATH + "combat.sound.speed.warning",
-                                () -> ModConfig.INSTANCE.soundSpeedWarning, v -> ModConfig.INSTANCE.soundSpeedWarning = v))
+                                () -> ModConfig.INSTANCE.soundSpeedWarning, v -> ModConfig.INSTANCE.soundSpeedWarning = v, ""))
+                        .option(Option.<Float>createBuilder()
+                                .name(Text.translatable(CONFIG_PATH + "combat.sound.speed.expire.volume"))
+                                .binding(1.0F, () -> ModConfig.INSTANCE.soundSpeedExpireVolume, v -> ModConfig.INSTANCE.soundSpeedExpireVolume = v)
+                                .controller(opt -> FloatSliderControllerBuilder.create(opt).range(0f, 1f).step(0.01f))
+                                .build())
+                        .option(Option.<Float>createBuilder()
+                                .name(Text.translatable(CONFIG_PATH + "combat.sound.speed.expire.pitch"))
+                                .binding(1.0F, () -> ModConfig.INSTANCE.soundSpeedExpirePitch, v -> ModConfig.INSTANCE.soundSpeedExpirePitch = v)
+                                .controller(opt -> FloatSliderControllerBuilder.create(opt).range(0f, 2f).step(0.01f))
+                                .build())
+                        .option(Option.<Float>createBuilder()
+                                .name(Text.translatable(CONFIG_PATH + "combat.sound.speed.warning.volume"))
+                                .binding(1.0F, () -> ModConfig.INSTANCE.soundSpeedWarningVolume, v -> ModConfig.INSTANCE.soundSpeedWarningVolume = v)
+                                .controller(opt -> FloatSliderControllerBuilder.create(opt).range(0f, 1f).step(0.01f))
+                                .build())
+                        .option(Option.<Float>createBuilder()
+                                .name(Text.translatable(CONFIG_PATH + "combat.sound.speed.warning.pitch"))
+                                .binding(1.0F, () -> ModConfig.INSTANCE.soundSpeedWarningPitch, v -> ModConfig.INSTANCE.soundSpeedWarningPitch = v)
+                                .controller(opt -> FloatSliderControllerBuilder.create(opt).range(0f, 2f).step(0.01f))
+                                .build())
                         .build())
                 .group(OptionGroup.createBuilder()
-                        .name(Text.translatable(CONFIG_PATH + "combat.sounds.fireRes"))
-                        .option(buildSoundOption(CONFIG_PATH + "combat.sound.fireRes.expire",
-                                () -> ModConfig.INSTANCE.soundFireResExpire, v -> ModConfig.INSTANCE.soundFireResExpire = v))
-                        .option(buildSoundOption(CONFIG_PATH + "combat.sound.fireRes.warning",
-                                () -> ModConfig.INSTANCE.soundFireResWarning, v -> ModConfig.INSTANCE.soundFireResWarning = v))
+                        .name(Text.translatable(CONFIG_PATH + "combat.sounds.fire_res"))
+                        .option(buildSoundOption(CONFIG_PATH + "combat.sound.fire_res.expire",
+                                () -> ModConfig.INSTANCE.soundFireResExpire, v -> ModConfig.INSTANCE.soundFireResExpire = v, ""))
+                        .option(buildSoundOption(CONFIG_PATH + "combat.sound.fire_res.warning",
+                                () -> ModConfig.INSTANCE.soundFireResWarning, v -> ModConfig.INSTANCE.soundFireResWarning = v, ""))
+                        .option(Option.<Float>createBuilder()
+                                .name(Text.translatable(CONFIG_PATH + "combat.sound.fire_res.expire.volume"))
+                                .binding(1.0F, () -> ModConfig.INSTANCE.soundFireResExpireVolume, v -> ModConfig.INSTANCE.soundFireResExpireVolume = v)
+                                .controller(opt -> FloatSliderControllerBuilder.create(opt).range(0f, 1f).step(0.01f))
+                                .build())
+                        .option(Option.<Float>createBuilder()
+                                .name(Text.translatable(CONFIG_PATH + "combat.sound.fire_res.expire.pitch"))
+                                .binding(1.0F, () -> ModConfig.INSTANCE.soundFireResExpirePitch, v -> ModConfig.INSTANCE.soundFireResExpirePitch = v)
+                                .controller(opt -> FloatSliderControllerBuilder.create(opt).range(0f, 2f).step(0.01f))
+                                .build())
+                        .option(Option.<Float>createBuilder()
+                                .name(Text.translatable(CONFIG_PATH + "combat.sound.fire_res.warning.volume"))
+                                .binding(1.0F, () -> ModConfig.INSTANCE.soundFireResWarningVolume, v -> ModConfig.INSTANCE.soundFireResWarningVolume = v)
+                                .controller(opt -> FloatSliderControllerBuilder.create(opt).range(0f, 1f).step(0.01f))
+                                .build())
+                        .option(Option.<Float>createBuilder()
+                                .name(Text.translatable(CONFIG_PATH + "combat.sound.fire_res.warning.pitch"))
+                                .binding(1.0F, () -> ModConfig.INSTANCE.soundFireResWarningPitch, v -> ModConfig.INSTANCE.soundFireResWarningPitch = v)
+                                .controller(opt -> FloatSliderControllerBuilder.create(opt).range(0f, 2f).step(0.01f))
+                                .build())
                         .build())
                 .build();
     }
 
-    private static Option<String> buildSoundOption(String translationKey, java.util.function.Supplier<Identifier> getter, java.util.function.Consumer<Identifier> setter) {
+    private static Option<String> buildSoundOption(String translationKey, Supplier<Identifier> getter, Consumer<Identifier> setter, String defSound) {
         return Option.<String>createBuilder()
                 .name(Text.translatable(translationKey))
-                .binding("",
+                .binding(defSound,
                         () -> getter.get() != null ? getter.get().toString() : "",
                         v -> setter.accept(v.isEmpty() ? null : Identifier.of(v)))
-                .controller(StringControllerBuilder::create)
+                .customController(opt -> SoundControllerBuilder.create(opt)
+                        .values(allSoundEventIds).build())
                 .build();
     }
 }

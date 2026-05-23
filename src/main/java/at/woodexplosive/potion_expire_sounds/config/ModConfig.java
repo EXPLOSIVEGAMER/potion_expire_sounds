@@ -48,10 +48,10 @@ public class ModConfig {
     public boolean playWarningSound2 = true;
 
     public int warningThreshold = 200;
-    public float volume_expire = 1.0f;
-    public float volume_warning = 1.0f;
-    public float pitch_expire = 1.0f;
-    public float pitch_warning = 1.0f;
+    public float volumeExpire = 1.0f;
+    public float volumeWarning = 1.0f;
+    public float pitchExpire = 1.0f;
+    public float pitchWarning = 1.0f;
 
     // Filter
     public FilterType filterType = FilterType.BOTH;
@@ -66,16 +66,30 @@ public class ModConfig {
     public boolean compactHud = false;
     public boolean showInfEffects = true;
     public int potionHudItemSize = 1;
-    public int potionHudX = 0;
-    public int potionHudY = 0;
+    public float potionHudX = 0.550F;
+    public float potionHudY = 0.440F;
 
     // Combat Mode
     public Identifier soundStrengthExpire = null;
     public Identifier soundStrengthWarning = null;
+    public float soundStrengthExpireVolume = 1.0F;
+    public float soundStrengthExpirePitch = 1.0F;
+    public float soundStrengthWarningVolume = 1.0F;
+    public float soundStrengthWarningPitch = 1.0F;
+
     public Identifier soundSpeedExpire = null;
     public Identifier soundSpeedWarning = null;
+    public float soundSpeedExpireVolume = 1.0F;
+    public float soundSpeedExpirePitch = 1.0F;
+    public float soundSpeedWarningVolume = 1.0F;
+    public float soundSpeedWarningPitch = 1.0F;
+
     public Identifier soundFireResExpire = null;
     public Identifier soundFireResWarning = null;
+    public float soundFireResExpireVolume = 1.0F;
+    public float soundFireResExpirePitch = 1.0F;
+    public float soundFireResWarningVolume = 1.0F;
+    public float soundFireResWarningPitch = 1.0F;
 
     public static void load() {
         if (Files.exists(CONFIG_PATH)) {
