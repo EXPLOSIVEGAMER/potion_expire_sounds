@@ -6,6 +6,8 @@
   "gui.potion_expire_sounds.potion_hud.drag_tooltip": "Drag to move",
   "gui.potion_expire_sounds.potion_hud.close_button": "Close",
   "gui.potion_expire_sounds.potion_hud.reset_button": "Reset",
+  "gui.potion_expire_sounds.potion_hud.settings_screen.show_icon_button": "Show Potion Icons",
+  "gui.potion_expire_sounds.potion_hud.settings_screen.show_text_button": "Show Potion Texts",
 
   "hud.potion_expire_sounds.potion_hud.compact_hud.tooltip": "+%s Effects",
 
@@ -63,5 +65,6 @@
   "config.potion_expire_sounds.combat.sound.fire_res.expire.volume": "Expire Volume",
   "config.potion_expire_sounds.combat.sound.fire_res.expire.pitch": "Expire Pitch",
   "config.potion_expire_sounds.combat.sound.fire_res.warning.volume": "Warning Volume",
-  "config.potion_expire_sounds.combat.sound.fire_res.warning.pitch": "Warning Pitch"
+  "config.potion_expire_sounds.combat.sound.fire_res.warning.pitch": "Warning Pitch",
+  "gui.potion_expire_sounds.reset": "Reset Button"
 }

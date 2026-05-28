@@ -106,10 +106,10 @@ public class PotionHud implements HudElement {
 
     private void renderEffect(DrawContext drawContext, MinecraftClient client, StatusEffectInstance effect, int startX, int currentY) {
         String duration = effect.getDuration() == -1 ? "∞" : TimeUtil.formatDuration(effect.getDuration());
-        String text = effect.getEffectType().value().getName().getString() + formatAmplifier(effect.getAmplifier()) + ": " + duration;
+        String text = String.format("%s:%s %s",ModConfig.INSTANCE.showText ? effect.getEffectType().value().getName().getString() : "", formatAmplifier(effect.getAmplifier()), duration);
 
-        drawContext.drawGuiTexture(RenderPipelines.GUI_TEXTURED, InGameHud.getEffectTexture(effect.getEffectType()), startX + 4, currentY, 18, 18);
-        drawContext.drawText(client.textRenderer, text, startX + 26, currentY + 4, 0xFFFFFFFF, true);
+        if (ModConfig.INSTANCE.showIcons) drawContext.drawGuiTexture(RenderPipelines.GUI_TEXTURED, InGameHud.getEffectTexture(effect.getEffectType()), startX + 4, currentY, 18, 18);
+        drawContext.drawText(client.textRenderer, text, startX + 26, currentY + 4, ModConfig.INSTANCE.textColor, true);
     }
 
     private void updateEffectCache(MinecraftClient client) {

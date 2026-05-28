@@ -1,14 +1,22 @@
 package at.woodexplosive.potion_expire_sounds.screen;
 
+import at.woodexplosive.potion_expire_sounds.PotionExpireSounds;
+import at.woodexplosive.potion_expire_sounds.config.custom.ConfigWidget;
 import at.woodexplosive.potion_expire_sounds.config.ModConfig;
+import at.woodexplosive.potion_expire_sounds.config.custom.ResetButtonWidget;
 import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.gui.Click;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.hud.InGameHud;
+import net.minecraft.client.gui.screen.ButtonTextures;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.client.gui.widget.*;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.text.Text;
+import org.jspecify.annotations.NonNull;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static at.woodexplosive.potion_expire_sounds.PotionExpireSounds.MOD_ID;
 
@@ -20,7 +28,7 @@ public class PotionHudEditScreen extends Screen {
     private final int boxWidth = 120;
     private final int boxHeight = 40;
 
-    private int x, y, dragOffsetX, dragOffsetY;
+    private int width, height, hudX, hudY, dragOffsetX, dragOffsetY;
     private boolean dragging = false;
 
     public PotionHudEditScreen(Screen parent) {
@@ -31,6 +39,9 @@ public class PotionHudEditScreen extends Screen {
     @Override
     public void init() {
         super.init();
+        this.width = client.getWindow().getScaledWidth();
+        this.height = client.getWindow().getScaledHeight();
+
         this.fromConfig();
 
         ButtonWidget closeButton = ButtonWidget.builder(
@@ -43,49 +54,71 @@ public class PotionHudEditScreen extends Screen {
         ButtonWidget resetButton = ButtonWidget.builder(
                         Text.translatable(TRANSLATION_PATH + "reset_button"),
                         btn -> {
-                            this.x = 10;
-                            this.y = 10;
+                            this.hudX = 10;
+                            this.hudY = 10;
                             this.toConfig();
                         }
                 ).dimensions(this.width / 2 - 110, this.height - 30, 100, 20)
                 .build();
 
+        TexturedButtonWidget settingsButton = new TexturedButtonWidget(
+                2, 2, 20, 20,
+                new ButtonTextures(
+                        PotionExpireSounds.id("icon/settings"),
+                        PotionExpireSounds.id("icon/settings_highlighted")
+                ),
+                btn -> {
+                    if (!(this instanceof SettingsScreen)) {
+                        SettingsScreen screen = new SettingsScreen(this,
+                                0, 25, this.width / 4, this.height / 4);
+                        this.client.setScreen(screen);
+                    } else {
+                        this.close();
+                    }
+                }
+        );
+
         this.addDrawableChild(resetButton);
         this.addDrawableChild(closeButton);
+        this.addDrawableChild(settingsButton);
     }
 
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
         super.render(context, mouseX, mouseY, delta);
 
-        String textStrength = StatusEffects.STRENGTH.value().getName().getString() + " 10s";
-        String textSpeed = StatusEffects.SPEED.value().getName().getString() + ":  2m 20s";
+        String textStrength = "";
+        String textSpeed = "";
+
+        if (ModConfig.INSTANCE.showText) {
+            textStrength = StatusEffects.STRENGTH.value().getName().getString();
+            textSpeed = StatusEffects.SPEED.value().getName().getString();
+        }
 
         context.getMatrices().pushMatrix();
-        context.getMatrices().translate(x, y);
+        context.getMatrices().translate(hudX, hudY);
 
         drawBoarder(context, 0, 0, boxWidth, boxHeight, 0xFFAAAAAA);
 
-        // Strength display
-        context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, InGameHud.getEffectTexture(StatusEffects.STRENGTH), 4, 2, 18, 18);
-        context.drawText(client.textRenderer, textStrength, 26, 6, 0xFFFFFFFF, true);
+        context.drawText(client.textRenderer, textStrength + ": 10s", 26, 6, ModConfig.INSTANCE.textColor, true);
+        context.drawText(client.textRenderer, textSpeed + ": 2m 20s", 26, 24, ModConfig.INSTANCE.textColor, true);
 
-        // Speed display
-        context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, InGameHud.getEffectTexture(StatusEffects.SPEED), 4, 20, 18, 18);
-        context.drawText(client.textRenderer, textSpeed, 26, 24, 0xFFFFFFFF, true);
+        if (ModConfig.INSTANCE.showIcons) {
+            context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, InGameHud.getEffectTexture(StatusEffects.SPEED), 4, 20, 18, 18);
+            context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, InGameHud.getEffectTexture(StatusEffects.STRENGTH), 4, 2, 18, 18);
+        }
 
         context.getMatrices().popMatrix();
 
-        // Drag Tooltip
         context.drawCenteredTextWithShadow(this.textRenderer, Text.translatable(TRANSLATION_PATH + "drag_tooltip"), this.width / 2, this.height / 2, 0xAAAAAAAA);
     }
 
     @Override
     public boolean mouseClicked(Click click, boolean doubled) {
-        if (click.x() >= x && click.x() <= x + boxWidth && click.y() >= y && click.y() <= y + boxHeight) {
+        if (click.x() >= hudX && click.x() <= hudX + boxWidth && click.y() >= hudY && click.y() <= hudY + boxHeight) {
             dragging = true;
-            dragOffsetX = (int) click.x() - x;
-            dragOffsetY = (int) click.y() - y;
+            dragOffsetX = (int) click.x() - hudX;
+            dragOffsetY = (int) click.y() - hudY;
             return true;
         }
         return super.mouseClicked(click, doubled);
@@ -94,13 +127,10 @@ public class PotionHudEditScreen extends Screen {
     @Override
     public boolean mouseDragged(Click click, double offsetX, double offsetY) {
         if (dragging) {
-            
             int targetX = (int) click.x() - dragOffsetX;
             int targetY = (int) click.y() - dragOffsetY;
-
-            this.x = Math.clamp(targetX, 0, client.getWindow().getScaledWidth() - boxWidth);
-            this.y = Math.clamp(targetY, 0, client.getWindow().getScaledHeight() - boxHeight);
-
+            this.hudX = Math.clamp(targetX, 0, this.width - boxWidth);
+            this.hudY = Math.clamp(targetY, 0, this.height - boxHeight);
             this.toConfig();
             return true;
         }
@@ -117,11 +147,11 @@ public class PotionHudEditScreen extends Screen {
     public void close() {
         this.toConfig();
         ModConfig.save();
-        if (parent instanceof PotionHudEditScreen) super.close();
+        if (parent instanceof PotionHudEditScreen && !(parent instanceof SettingsScreen)) super.close();
         this.client.setScreen(parent);
     }
 
-    private void drawBoarder(DrawContext context, int x, int y, int x2, int y2, int color) {
+    protected void drawBoarder(DrawContext context, int x, int y, int x2, int y2, int color) {
         context.drawHorizontalLine(x, x2, y, color);
         context.drawHorizontalLine(x, x2, y2, color);
         context.drawVerticalLine(x, y, y2, color);
@@ -129,12 +159,168 @@ public class PotionHudEditScreen extends Screen {
     }
 
     private void fromConfig() {
-        x = (int) (ModConfig.INSTANCE.potionHudX * client.getWindow().getScaledWidth());
-        y = (int) (ModConfig.INSTANCE.potionHudY * client.getWindow().getScaledHeight());
+        hudX = (int) (ModConfig.INSTANCE.potionHudX * this.width);
+        hudY = (int) (ModConfig.INSTANCE.potionHudY * this.height);
     }
 
     private void toConfig() {
-        ModConfig.INSTANCE.potionHudX = (float) this.x / client.getWindow().getScaledWidth();
-        ModConfig.INSTANCE.potionHudY = (float) this.y / client.getWindow().getScaledHeight();
+        ModConfig.INSTANCE.potionHudX = (float) this.hudX / this.width;
+        ModConfig.INSTANCE.potionHudY = (float) this.hudY / this.height;
+    }
+
+    public static class SettingsScreen extends PotionHudEditScreen {
+        private static final String TRANSLATION_PATH = PotionHudEditScreen.TRANSLATION_PATH + "settings_screen.";
+
+        // Local list – no more static global state in ConfigWidget
+        private final List<ConfigWidget<?, ?>> configWidgets = new ArrayList<>();
+
+        private final Screen parent;
+        private final int x, y, width, height;
+
+        private SettingsScreen(Screen parent, int x, int y, int width, int height) {
+            super(parent);
+            this.parent = parent;
+            this.x = x;
+            this.y = y;
+            this.width = width;
+            this.height = height;
+        }
+
+        @Override
+        public void init() {
+            super.init();
+            configWidgets.clear();
+
+            // --- text color input ---
+            ConfigWidget<TextFieldWidget, Integer> textColorWidget = getIntegerConfigWidget();
+
+            configWidgets.add(textColorWidget);
+
+            // --- show icons checkbox ---
+            @SuppressWarnings("unchecked")
+            ConfigWidget<?, Boolean>[] booleanConfigWidgetsRef = new ConfigWidget[2];
+
+            CheckboxWidget showIconButton = CheckboxWidget.builder(
+                            Text.translatable(TRANSLATION_PATH + "show_icon_button"),
+                            this.textRenderer
+                    )
+                    .pos(this.x + 2, this.y + 25)
+                    .checked(ModConfig.INSTANCE.showIcons)
+                    .callback((checkbox, checked) -> {
+                        ModConfig.INSTANCE.showIcons = checked;
+                        if (booleanConfigWidgetsRef[0] != null) booleanConfigWidgetsRef[0].set(checked);
+                    })
+                    .build();
+
+            CheckboxWidget showTextBtn = CheckboxWidget.builder(
+                            Text.translatable(TRANSLATION_PATH + "show_text_button"),
+                            this.textRenderer
+                    ).pos(this.x + 2, this.y + 50)
+                    .checked(ModConfig.INSTANCE.showText)
+                    .callback(((checkbox, checked) -> {
+                        ModConfig.INSTANCE.showText = checked;
+                        if (booleanConfigWidgetsRef[1] != null) booleanConfigWidgetsRef[1].set(checked);
+                    }))
+                    .build();
+
+            booleanConfigWidgetsRef[0] = new ConfigWidget<>(
+                    showIconButton,
+                    true,
+                    () -> ModConfig.INSTANCE.showIcons,
+                    v -> ModConfig.INSTANCE.showIcons = v
+            );
+
+            booleanConfigWidgetsRef[1] = new ConfigWidget<>(
+                    showTextBtn,
+                    true,
+                    () -> ModConfig.INSTANCE.showText,
+                    v -> ModConfig.INSTANCE.showText = v
+            );
+
+            // Sync value → checkbox (called on reset/load)
+            booleanConfigWidgetsRef[0].setOnValueChanged(v -> {
+                if (showIconButton.isChecked() != v) showIconButton.onPress(null);
+            });
+
+            booleanConfigWidgetsRef[1].setOnValueChanged(v -> {
+                if (showTextBtn.isChecked() != v) showTextBtn.onPress(null);
+            });
+
+            configWidgets.add(booleanConfigWidgetsRef[0]);
+            configWidgets.add(booleanConfigWidgetsRef[1]);
+
+            for (ConfigWidget<?, ?> w : configWidgets) {
+                this.addDrawableChild(w.getWidget());
+                this.addDrawableChild(new ResetButtonWidget(
+                        this.width - 25,
+                        w.getWidget().getY(),
+                        w
+                ));
+            }
+        }
+
+        private @NonNull ConfigWidget<TextFieldWidget, Integer> getIntegerConfigWidget() {
+            TextFieldWidget textColorField = new TextFieldWidget(
+                    this.textRenderer,
+                    this.x + 18, this.y + 5,
+                    70, 12,
+                    Text.translatable(TRANSLATION_PATH + "text_color_input")
+            );
+
+            ConfigWidget<TextFieldWidget, Integer> textColorWidget = new ConfigWidget<>(
+                    textColorField,
+                    0xFFFFFFFF,
+                    () -> ModConfig.INSTANCE.textColor,
+                    v -> ModConfig.INSTANCE.textColor = v
+            );
+
+            // Sync field → widget value
+            textColorField.setText(String.format("%08X", textColorWidget.get()));
+            textColorField.setChangedListener(raw -> {
+                try {
+                    String cleaned = raw.replaceAll("[^0-9a-fA-F]", "");
+                    if (!cleaned.matches("[0-9a-fA-F]{8}")) return;
+                    textColorWidget.set(Long.decode("0x" + cleaned.toUpperCase()).intValue());
+                    textColorWidget.save();
+                } catch (NumberFormatException e) {
+                    PotionExpireSounds.LOGGER.error("No valid Hex", e);
+                }
+            });
+
+            // Sync widget value → field (called on reset/load)
+            textColorWidget.setOnValueChanged(v ->
+                    textColorField.setText(String.format("%08X", v))
+            );
+            return textColorWidget;
+        }
+
+        @Override
+        public void render(DrawContext context, int mouseX, int mouseY, float deltaTicks) {
+            super.render(context, mouseX, mouseY, deltaTicks);
+            enableScissor(context);
+            this.drawBoarder(context, this.x, this.y, this.width - 1, this.height - 1, 0xFFFFFFFF);
+            context.drawText(this.textRenderer, "0x", this.x + 5, this.y + 7, 0xFFFFFFFF, true);
+            context.disableScissor();
+        }
+
+        @Override
+        public void renderBackground(DrawContext context, int mouseX, int mouseY, float deltaTicks) {
+            super.renderBackground(context, mouseX, mouseY, deltaTicks);
+            enableScissor(context);
+            this.renderDarkening(context, this.x, this.y, this.width, this.height);
+            context.disableScissor();
+        }
+
+        @Override
+        public void close() {
+            configWidgets.forEach(ConfigWidget::save);
+            configWidgets.clear();
+            if (parent instanceof SettingsScreen) client.setScreen(null);
+            client.setScreen(parent);
+        }
+
+        private void enableScissor(DrawContext context) {
+            context.enableScissor(this.x, this.y, this.width, this.height);
+        }
     }
 }

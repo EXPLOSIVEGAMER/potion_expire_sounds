@@ -68,6 +68,9 @@ public class ModConfig {
     public int potionHudItemSize = 1;
     public float potionHudX = 0.550F;
     public float potionHudY = 0.440F;
+    public int textColor = 0xFFFFFFFF;
+    public boolean showIcons = true;
+    public boolean showText = true;
 
     // Combat Mode
     public Identifier soundStrengthExpire = null;
