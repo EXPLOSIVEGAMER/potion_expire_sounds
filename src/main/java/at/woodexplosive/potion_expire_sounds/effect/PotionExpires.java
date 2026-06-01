@@ -57,7 +57,7 @@ public class PotionExpires implements ClientTickEvents.StartTick {
 
             } else if (currentDuration <= 90 && lastDuration > 20 && ModConfig.INSTANCE.playWarningSound2) {
 
-                if (client.isPaused()) return;
+                if (client.isPaused()) continue;
 
                 if (currentDuration % 20 == 0) {
                     player.playSound(
