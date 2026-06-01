@@ -33,6 +33,9 @@ public class PotionExpires implements ClientTickEvents.StartTick {
 
         int cooldownTicks = 20;
 
+        if (currentTick < lastWarningSoundTick) lastWarningSoundTick = currentTick - cooldownTicks;
+        if (currentTick < lastExpireSoundTick) lastExpireSoundTick = currentTick - cooldownTicks;
+
         for (StatusEffectInstance effectInstance : player.getStatusEffects()) {
             RegistryEntry<StatusEffect> type = effectInstance.getEffectType();
             int currentDuration = effectInstance.getDuration();
@@ -58,7 +61,7 @@ public class PotionExpires implements ClientTickEvents.StartTick {
             }
             else if (currentDuration <= 20 && lastDuration > 20 && ModConfig.INSTANCE.playExpireSound) {
                 if (currentTick - lastExpireSoundTick >= cooldownTicks) {
-                    float[] volumePitch = getVolumeAndPitch(effectInstance, false);
+                    float[] volumePitch = getVolumeAndPitch(effectInstance, true);
 
                     player.playSound(
                             getExpireSound(effectInstance),
