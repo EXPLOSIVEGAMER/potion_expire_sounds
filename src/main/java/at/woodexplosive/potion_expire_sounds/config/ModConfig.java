@@ -71,6 +71,7 @@ public class ModConfig {
     public int textColor = 0xFFFFFFFF;
     public boolean showIcons = true;
     public boolean showText = true;
+    public float hudSize = 1.0f;
 
     // Combat Mode
     public Identifier soundStrengthExpire = null;

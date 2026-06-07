@@ -61,6 +61,7 @@ public class ConfigWidget<W extends ClickableWidget, T> {
      */
     public void reset() {
         setValue(defaultValue);
+        save();
     }
 
     /** Returns the current (possibly unsaved) value. */

@@ -3,6 +3,7 @@ package at.woodexplosive.potion_expire_sounds.screen;
 import at.woodexplosive.potion_expire_sounds.PotionExpireSounds;
 import at.woodexplosive.potion_expire_sounds.config.custom.ConfigWidget;
 import at.woodexplosive.potion_expire_sounds.config.ModConfig;
+import at.woodexplosive.potion_expire_sounds.config.custom.RangedSliderWidget;
 import at.woodexplosive.potion_expire_sounds.config.custom.ResetButtonWidget;
 import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.gui.Click;
@@ -70,7 +71,7 @@ public class PotionHudEditScreen extends Screen {
                 btn -> {
                     if (!(this instanceof SettingsScreen)) {
                         SettingsScreen screen = new SettingsScreen(this,
-                                0, 25, this.width / 4, this.height / 4);
+                                0, 25, this.width / 3, this.height / 3);
                         this.client.setScreen(screen);
                     } else {
                         this.close();
@@ -98,6 +99,9 @@ public class PotionHudEditScreen extends Screen {
         context.getMatrices().pushMatrix();
         context.getMatrices().translate(hudX, hudY);
 
+        float scale = ModConfig.INSTANCE.hudSize;
+        context.getMatrices().scale(scale, scale);
+
         drawBoarder(context, 0, 0, boxWidth, boxHeight, 0xFFAAAAAA);
 
         context.drawText(client.textRenderer, textStrength + ": 10s", 26, 6, ModConfig.INSTANCE.textColor, true);
@@ -115,7 +119,9 @@ public class PotionHudEditScreen extends Screen {
 
     @Override
     public boolean mouseClicked(Click click, boolean doubled) {
-        if (click.x() >= hudX && click.x() <= hudX + boxWidth && click.y() >= hudY && click.y() <= hudY + boxHeight) {
+        int scaledW = (int) (boxWidth * ModConfig.INSTANCE.hudSize);
+        int scaledH = (int) (boxHeight * ModConfig.INSTANCE.hudSize);
+        if (click.x() >= hudX && click.x() <= hudX + scaledW && click.y() >= hudY && click.y() <= hudY + scaledH) {
             dragging = true;
             dragOffsetX = (int) click.x() - hudX;
             dragOffsetY = (int) click.y() - hudY;
@@ -127,10 +133,12 @@ public class PotionHudEditScreen extends Screen {
     @Override
     public boolean mouseDragged(Click click, double offsetX, double offsetY) {
         if (dragging) {
+            int scaledW = (int) (boxWidth * ModConfig.INSTANCE.hudSize);
+            int scaledH = (int) (boxHeight * ModConfig.INSTANCE.hudSize);
             int targetX = (int) click.x() - dragOffsetX;
             int targetY = (int) click.y() - dragOffsetY;
-            this.hudX = Math.clamp(targetX, 0, this.width - boxWidth);
-            this.hudY = Math.clamp(targetY, 0, this.height - boxHeight);
+            this.hudX = Math.clamp(targetX, 0, this.width - scaledW);
+            this.hudY = Math.clamp(targetY, 0, this.height - scaledH);
             this.toConfig();
             return true;
         }
@@ -195,6 +203,24 @@ public class PotionHudEditScreen extends Screen {
             ConfigWidget<TextFieldWidget, Integer> textColorWidget = getIntegerConfigWidget();
 
             configWidgets.add(textColorWidget);
+
+            // Hud Size
+            ConfigWidget<RangedSliderWidget<Float>, Float> hudSizeWidget = new ConfigWidget<>(
+                    new RangedSliderWidget<>(
+                            this.x + 2, this.y + 75, 150, 25,
+                            Text.translatable(TRANSLATION_PATH + "hud_size"),
+                            0.5f, 2f, 0.1f, ModConfig.INSTANCE.hudSize,
+                            value -> (float) Math.round(value * 10) / 10
+                    ),
+                    1f,
+                    () -> ModConfig.INSTANCE.hudSize,
+                    f -> ModConfig.INSTANCE.hudSize = f
+            );
+
+            hudSizeWidget.getWidget().setOnChange(v -> { hudSizeWidget.set(v); hudSizeWidget.save(); });
+            hudSizeWidget.setOnValueChanged(v -> hudSizeWidget.getWidget().setValue(v));
+
+            configWidgets.add(hudSizeWidget);
 
             // --- show icons checkbox ---
             @SuppressWarnings("unchecked")
