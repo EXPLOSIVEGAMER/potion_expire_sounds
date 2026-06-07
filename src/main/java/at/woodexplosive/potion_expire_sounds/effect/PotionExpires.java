@@ -1,6 +1,7 @@
 package at.woodexplosive.potion_expire_sounds.effect;
 
 import at.woodexplosive.potion_expire_sounds.config.ModConfig;
+import at.woodexplosive.potion_expire_sounds.sound.ModSounds;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
@@ -25,7 +26,7 @@ public class PotionExpires implements ClientTickEvents.StartTick {
 
     @Override
     public void onStartTick(MinecraftClient client) {
-        if (client.player == null || client.isPaused()) return;
+        if (client.player == null || client.isPaused() || !ModConfig.INSTANCE.enableMod) return;
 
         int warningThreshold = ModConfig.INSTANCE.warningThreshold;
         ClientPlayerEntity player = client.player;
@@ -98,7 +99,7 @@ public class PotionExpires implements ClientTickEvents.StartTick {
         if (effect.getEffectType().equals(StatusEffects.FIRE_RESISTANCE) && ModConfig.INSTANCE.soundFireResExpire != null)
             return SoundEvent.of(ModConfig.INSTANCE.soundFireResExpire);
 
-        return SoundEvent.of(ModConfig.INSTANCE.soundPotionExpire);
+        return ModConfig.INSTANCE.soundPotionExpire != null ? SoundEvent.of(ModConfig.INSTANCE.soundPotionExpire) : ModSounds.POTION_EXPIRE;
     }
 
     private SoundEvent getWarningSound(StatusEffectInstance effect) {
@@ -109,7 +110,7 @@ public class PotionExpires implements ClientTickEvents.StartTick {
         if (effect.getEffectType().equals(StatusEffects.FIRE_RESISTANCE) && ModConfig.INSTANCE.soundFireResWarning != null)
             return SoundEvent.of(ModConfig.INSTANCE.soundFireResWarning);
 
-        return SoundEvent.of(ModConfig.INSTANCE.soundPotionWarning);
+        return ModConfig.INSTANCE.soundPotionWarning != null ? SoundEvent.of(ModConfig.INSTANCE.soundPotionWarning) : ModSounds.POTION_WARNING;
     }
 
     private float[] getVolumeAndPitch(StatusEffectInstance effect, boolean isExpire) {

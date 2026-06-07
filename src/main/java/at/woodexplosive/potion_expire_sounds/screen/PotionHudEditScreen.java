@@ -3,6 +3,7 @@ package at.woodexplosive.potion_expire_sounds.screen;
 import at.woodexplosive.potion_expire_sounds.PotionExpireSounds;
 import at.woodexplosive.potion_expire_sounds.config.custom.ConfigWidget;
 import at.woodexplosive.potion_expire_sounds.config.ModConfig;
+import at.woodexplosive.potion_expire_sounds.config.custom.RangedSliderWidget;
 import at.woodexplosive.potion_expire_sounds.config.custom.ResetButtonWidget;
 import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.gui.Click;
@@ -28,7 +29,7 @@ public class PotionHudEditScreen extends Screen {
     private final int boxWidth = 120;
     private final int boxHeight = 40;
 
-    private int width, height, hudX, hudY, dragOffsetX, dragOffsetY;
+    private int hudX, hudY, dragOffsetX, dragOffsetY;
     private boolean dragging = false;
 
     public PotionHudEditScreen(Screen parent) {
@@ -39,9 +40,6 @@ public class PotionHudEditScreen extends Screen {
     @Override
     public void init() {
         super.init();
-        this.width = client.getWindow().getScaledWidth();
-        this.height = client.getWindow().getScaledHeight();
-
         this.fromConfig();
 
         ButtonWidget closeButton = ButtonWidget.builder(
@@ -54,8 +52,8 @@ public class PotionHudEditScreen extends Screen {
         ButtonWidget resetButton = ButtonWidget.builder(
                         Text.translatable(TRANSLATION_PATH + "reset_button"),
                         btn -> {
-                            this.hudX = 10;
-                            this.hudY = 10;
+                            this.hudX = (int) (0.6 * this.width);
+                            this.hudY = (int) (0.9 * this.height);
                             this.toConfig();
                         }
                 ).dimensions(this.width / 2 - 110, this.height - 30, 100, 20)
@@ -70,7 +68,7 @@ public class PotionHudEditScreen extends Screen {
                 btn -> {
                     if (!(this instanceof SettingsScreen)) {
                         SettingsScreen screen = new SettingsScreen(this,
-                                0, 25, this.width / 4, this.height / 4);
+                                10, 25, 284, 152);
                         this.client.setScreen(screen);
                     } else {
                         this.close();
@@ -98,6 +96,9 @@ public class PotionHudEditScreen extends Screen {
         context.getMatrices().pushMatrix();
         context.getMatrices().translate(hudX, hudY);
 
+        float scale = ModConfig.INSTANCE.hudSize;
+        context.getMatrices().scale(scale, scale);
+
         drawBoarder(context, 0, 0, boxWidth, boxHeight, 0xFFAAAAAA);
 
         context.drawText(client.textRenderer, textStrength + ": 10s", 26, 6, ModConfig.INSTANCE.textColor, true);
@@ -115,7 +116,9 @@ public class PotionHudEditScreen extends Screen {
 
     @Override
     public boolean mouseClicked(Click click, boolean doubled) {
-        if (click.x() >= hudX && click.x() <= hudX + boxWidth && click.y() >= hudY && click.y() <= hudY + boxHeight) {
+        int scaledW = (int) (boxWidth * ModConfig.INSTANCE.hudSize);
+        int scaledH = (int) (boxHeight * ModConfig.INSTANCE.hudSize);
+        if (click.x() >= hudX && click.x() <= hudX + scaledW && click.y() >= hudY && click.y() <= hudY + scaledH) {
             dragging = true;
             dragOffsetX = (int) click.x() - hudX;
             dragOffsetY = (int) click.y() - hudY;
@@ -127,10 +130,12 @@ public class PotionHudEditScreen extends Screen {
     @Override
     public boolean mouseDragged(Click click, double offsetX, double offsetY) {
         if (dragging) {
+            int scaledW = (int) (boxWidth * ModConfig.INSTANCE.hudSize);
+            int scaledH = (int) (boxHeight * ModConfig.INSTANCE.hudSize);
             int targetX = (int) click.x() - dragOffsetX;
             int targetY = (int) click.y() - dragOffsetY;
-            this.hudX = Math.clamp(targetX, 0, this.width - boxWidth);
-            this.hudY = Math.clamp(targetY, 0, this.height - boxHeight);
+            this.hudX = Math.clamp(targetX, 0, this.width - scaledW);
+            this.hudY = Math.clamp(targetY, 0, this.height - scaledH);
             this.toConfig();
             return true;
         }
@@ -159,8 +164,10 @@ public class PotionHudEditScreen extends Screen {
     }
 
     private void fromConfig() {
-        hudX = (int) (ModConfig.INSTANCE.potionHudX * this.width);
-        hudY = (int) (ModConfig.INSTANCE.potionHudY * this.height);
+        int scaledW = (int) (boxWidth * ModConfig.INSTANCE.hudSize);
+        int scaledH = (int) (boxHeight * ModConfig.INSTANCE.hudSize);
+        hudX = Math.clamp((int) (ModConfig.INSTANCE.potionHudX * this.width), 0, Math.max(0, this.width - scaledW));
+        hudY = Math.clamp((int) (ModConfig.INSTANCE.potionHudY * this.height), 0, Math.max(0, this.height - scaledH));
     }
 
     private void toConfig() {
@@ -192,9 +199,30 @@ public class PotionHudEditScreen extends Screen {
             configWidgets.clear();
 
             // --- text color input ---
-            ConfigWidget<TextFieldWidget, Integer> textColorWidget = getIntegerConfigWidget();
+            ConfigWidget<TextFieldWidget, Integer> textColorWidget = getIntegerConfigWidget(
+                    this.x + 18, this.y + 5,
+                    70, 12,
+                    Text.translatable(TRANSLATION_PATH + "text_color_input"));
 
             configWidgets.add(textColorWidget);
+
+            // Hud Size
+            ConfigWidget<RangedSliderWidget<Float>, Float> hudSizeWidget = new ConfigWidget<>(
+                    new RangedSliderWidget<>(
+                            this.x + 2, this.y + 75, 100, 15,
+                            Text.empty(),
+                            0.5f, 2f, 0.1f, ModConfig.INSTANCE.hudSize,
+                            value -> (float) Math.round(value * 10) / 10
+                    ),
+                    1f,
+                    () -> ModConfig.INSTANCE.hudSize,
+                    f -> ModConfig.INSTANCE.hudSize = f
+            );
+
+            hudSizeWidget.getWidget().setOnChange(v -> { hudSizeWidget.set(v); hudSizeWidget.save(); });
+            hudSizeWidget.setOnValueChanged(v -> hudSizeWidget.getWidget().setValue(v));
+
+            configWidgets.add(hudSizeWidget);
 
             // --- show icons checkbox ---
             @SuppressWarnings("unchecked")
@@ -259,12 +287,12 @@ public class PotionHudEditScreen extends Screen {
             }
         }
 
-        private @NonNull ConfigWidget<TextFieldWidget, Integer> getIntegerConfigWidget() {
+        private @NonNull ConfigWidget<TextFieldWidget, Integer> getIntegerConfigWidget(int x, int y, int width, int height, Text text) {
             TextFieldWidget textColorField = new TextFieldWidget(
                     this.textRenderer,
-                    this.x + 18, this.y + 5,
-                    70, 12,
-                    Text.translatable(TRANSLATION_PATH + "text_color_input")
+                    x, y,
+                    width, height,
+                    text
             );
 
             ConfigWidget<TextFieldWidget, Integer> textColorWidget = new ConfigWidget<>(
@@ -299,7 +327,11 @@ public class PotionHudEditScreen extends Screen {
             super.render(context, mouseX, mouseY, deltaTicks);
             enableScissor(context);
             this.drawBoarder(context, this.x, this.y, this.width - 1, this.height - 1, 0xFFFFFFFF);
+            // Text Color Input
             context.drawText(this.textRenderer, "0x", this.x + 5, this.y + 7, 0xFFFFFFFF, true);
+            context.drawText(this.textRenderer, Text.translatable(TRANSLATION_PATH + "hud_text_color"), this.x + 92, this.y + 7, 0xFFFFFFFF, true);
+            // hud size
+            context.drawText(this.textRenderer, Text.translatable(TRANSLATION_PATH + "hud_size"), x + 105, y + 78, 0xFFFFFFFF, true);
             context.disableScissor();
         }
 

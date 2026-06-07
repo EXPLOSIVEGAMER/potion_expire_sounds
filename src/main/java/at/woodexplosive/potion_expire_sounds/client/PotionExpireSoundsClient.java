@@ -20,7 +20,7 @@ import static at.woodexplosive.potion_expire_sounds.PotionExpireSounds.MOD_ID;
 
 public class PotionExpireSoundsClient implements ClientModInitializer {
 
-    private static final KeyBinding.Category CATEGORY = new KeyBinding.Category(PotionExpireSounds.id(MOD_ID));
+    private static final KeyBinding.Category CATEGORY = new KeyBinding.Category(PotionExpireSounds.id(""));
 
     public KeyBinding openConfig;
     public static boolean isModMenuEnabled;

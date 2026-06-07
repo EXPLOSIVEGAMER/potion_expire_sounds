@@ -29,7 +29,7 @@ public class PotionHud implements HudElement {
 
     public void render(@NotNull DrawContext drawContext, @NotNull RenderTickCounter tickCounter) {
         MinecraftClient client = MinecraftClient.getInstance();
-        if (client.player == null || !ModConfig.INSTANCE.displayPotionHud) return;
+        if (client.player == null || !ModConfig.INSTANCE.displayPotionHud || !ModConfig.INSTANCE.enableMod) return;
 
         int currentPlayerAge = client.player.age;
         if (this.lastPlayerAge != currentPlayerAge) {
@@ -39,53 +39,58 @@ public class PotionHud implements HudElement {
 
         if (this.cachedEffects.isEmpty()) return;
 
+        float scale = ModConfig.INSTANCE.hudSize;
         int startX = (int) (ModConfig.INSTANCE.potionHudX * client.getWindow().getScaledWidth());
-        int currentY = getCurrentY(client);
+        int startY = getStartY(client, scale);
+
+        drawContext.getMatrices().pushMatrix();
+        drawContext.getMatrices().translate(startX, startY);
+        drawContext.getMatrices().scale(scale, scale);
+
+        int currentY = 40;
 
         if (ModConfig.INSTANCE.compactHud) {
             if (ModConfig.INSTANCE.potionHudItemSize == 1) {
                 for (StatusEffectInstance cachedLowestEffect : this.cachedLowestEffects) {
-                    renderEffect(drawContext, client, cachedLowestEffect, startX, currentY);
+                    renderEffect(drawContext, client, cachedLowestEffect, currentY);
                     currentY += 20;
                 }
 
                 int remaining = this.cachedEffectSize - this.cachedLowestEffects.size();
                 if (remaining > 0) {
                     Text tooltip = Text.translatable("hud." + PotionExpireSounds.MOD_ID + ".potion_hud.compact_hud.tooltip", remaining);
-                    drawContext.drawText(client.textRenderer, tooltip, startX + 26, currentY + 4, 0xFFFFFFFF, true);
+                    drawContext.drawText(client.textRenderer, tooltip, 26, currentY + 4, 0xFFFFFFFF, true);
                 }
             } else {
                 int toRender = Math.min(ModConfig.INSTANCE.potionHudItemSize, this.cachedEffects.size());
                 for (int i = 0; i < toRender; i++) {
-                    renderEffect(drawContext, client, this.cachedEffects.get(i), startX, currentY);
+                    renderEffect(drawContext, client, this.cachedEffects.get(i), currentY);
                     currentY += 20;
                 }
 
                 int remaining = this.cachedEffectSize - ModConfig.INSTANCE.potionHudItemSize;
                 if (remaining > 0) {
                     Text tooltip = Text.translatable("hud." + PotionExpireSounds.MOD_ID + ".potion_hud.compact_hud.tooltip", remaining);
-                    drawContext.drawText(client.textRenderer, tooltip, startX + 26, currentY + 4, 0xFFFFFFFF, true);
+                    drawContext.drawText(client.textRenderer, tooltip, 26, currentY + 4, 0xFFFFFFFF, true);
                 }
             }
         } else {
             for (StatusEffectInstance cachedEffect : this.cachedEffects) {
-                renderEffect(drawContext, client, cachedEffect, startX, currentY);
+                renderEffect(drawContext, client, cachedEffect, currentY);
                 currentY += 20;
             }
         }
+
+        drawContext.getMatrices().popMatrix();
     }
 
-    private int getCurrentY(MinecraftClient client) {
-        int startY = (int) (ModConfig.INSTANCE.potionHudY * client.getWindow().getScaledHeight());
-
-        int currentHudHeight = getCurrentHudHeight();
-
+    private int getStartY(MinecraftClient client, float scale) {
+        int anchorY = (int) (ModConfig.INSTANCE.potionHudY * client.getWindow().getScaledHeight());
         boolean atBottom = ModConfig.INSTANCE.potionHudY > 0.5f;
         if (atBottom) {
-            startY = startY - currentHudHeight + 40;
+            return anchorY - (int) (getCurrentHudHeight() * scale);
         }
-
-        return startY + 2;
+        return anchorY + 2;
     }
 
     private int getCurrentHudHeight() {
@@ -104,12 +109,12 @@ public class PotionHud implements HudElement {
         return linesToRender * 20;
     }
 
-    private void renderEffect(DrawContext drawContext, MinecraftClient client, StatusEffectInstance effect, int startX, int currentY) {
+    private void renderEffect(DrawContext drawContext, MinecraftClient client, StatusEffectInstance effect, int y) {
         String duration = effect.getDuration() == -1 ? "∞" : TimeUtil.formatDuration(effect.getDuration());
-        String text = String.format("%s:%s %s",ModConfig.INSTANCE.showText ? effect.getEffectType().value().getName().getString() : "", formatAmplifier(effect.getAmplifier()), duration);
+        String text = String.format("%s:%s %s", ModConfig.INSTANCE.showText ? effect.getEffectType().value().getName().getString() : "", formatAmplifier(effect.getAmplifier()), duration);
 
-        if (ModConfig.INSTANCE.showIcons) drawContext.drawGuiTexture(RenderPipelines.GUI_TEXTURED, InGameHud.getEffectTexture(effect.getEffectType()), startX + 4, currentY, 18, 18);
-        drawContext.drawText(client.textRenderer, text, startX + 26, currentY + 4, ModConfig.INSTANCE.textColor, true);
+        if (ModConfig.INSTANCE.showIcons) drawContext.drawGuiTexture(RenderPipelines.GUI_TEXTURED, InGameHud.getEffectTexture(effect.getEffectType()), 4, y, 18, 18);
+        drawContext.drawText(client.textRenderer, text, 26, y + 4, ModConfig.INSTANCE.textColor, true);
     }
 
     private void updateEffectCache(MinecraftClient client) {

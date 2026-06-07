@@ -43,6 +43,8 @@ public class ModConfig {
     private static final Path CONFIG_PATH = FabricLoader.getInstance()
             .getConfigDir().resolve(MOD_ID+".json");
 
+    public boolean enableMod = true;
+
     public boolean playExpireSound = true;
     public boolean playWarningSound = true;
     public boolean playWarningSound2 = true;
@@ -66,11 +68,12 @@ public class ModConfig {
     public boolean compactHud = false;
     public boolean showInfEffects = true;
     public int potionHudItemSize = 1;
-    public float potionHudX = 0.550F;
-    public float potionHudY = 0.440F;
+    public float potionHudX = 0.6f;
+    public float potionHudY = 0.9f;
     public int textColor = 0xFFFFFFFF;
     public boolean showIcons = true;
     public boolean showText = true;
+    public float hudSize = 1.0f;
 
     // Combat Mode
     public Identifier soundStrengthExpire = null;
