@@ -1,0 +1,18 @@
+{
+  "potion_warning": {
+    "sounds": [
+      {
+        "name": "potion_expire_sounds:potion_warning",
+        "stream": false
+      }
+    ]
+  },
+  "potion_expire": {
+    "sounds": [
+      {
+        "name": "potion_expire_sounds:potion_expire",
+        "stream": false
+      }
+    ]
+  }
+}

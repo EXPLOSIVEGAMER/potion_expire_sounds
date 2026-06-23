@@ -5,24 +5,26 @@ import at.woodexplosive.potion_expire_sounds.config.ModConfig;
 import at.woodexplosive.potion_expire_sounds.config.ModConfigScreen;
 import at.woodexplosive.potion_expire_sounds.effect.PotionExpires;
 import at.woodexplosive.potion_expire_sounds.screen.PotionHud;
+import com.mojang.blaze3d.platform.InputConstants;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
+import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.VanillaHudElements;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.option.KeyBinding;
-import net.minecraft.client.util.InputUtil;
+import net.minecraft.client.KeyMapping;
+import net.minecraft.client.Minecraft;
+import net.minecraft.resources.Identifier;
 import org.lwjgl.glfw.GLFW;
+
 
 import static at.woodexplosive.potion_expire_sounds.PotionExpireSounds.MOD_ID;
 
 public class PotionExpireSoundsClient implements ClientModInitializer {
 
-    private static final KeyBinding.Category CATEGORY = new KeyBinding.Category(PotionExpireSounds.id(MOD_ID));
+    private static final KeyMapping.Category CATEGORY = KeyMapping.Category.register(PotionExpireSounds.id("category"));
 
-    public KeyBinding openConfig;
+    public KeyMapping openConfig;
     public static boolean isModMenuEnabled;
 
     @Override
@@ -38,25 +40,25 @@ public class PotionExpireSoundsClient implements ClientModInitializer {
 
         HudElementRegistry.attachElementBefore(
                 VanillaHudElements.HOTBAR,
-                PotionExpireSounds.id("potion_hud"),
+                Identifier.fromNamespaceAndPath(MOD_ID, "potion_hud"),
                 new PotionHud()
         );
 
         ClientTickEvents.END_CLIENT_TICK.register(this::openConfig);
     }
 
-    private void openConfig(MinecraftClient client) {
-        if (client.player == null || !openConfig.wasPressed()) return;
+    private void openConfig(Minecraft client) {
+        if (client.player == null || !openConfig.consumeClick()) return;
 
-        client.setScreen(ModConfigScreen.createScreen(client.currentScreen));
+        client.gui.setScreen(ModConfigScreen.createScreen(client.gui.screen()));
 
     }
 
     private void rKeyBindings() {
-        openConfig = KeyBindingHelper.registerKeyBinding(
-                new KeyBinding(
+        openConfig = KeyMappingHelper.registerKeyMapping(
+                new KeyMapping(
                         "key." + MOD_ID + ".open_config",
-                        InputUtil.Type.KEYSYM,
+                        InputConstants.Type.KEYSYM,
                         GLFW.GLFW_KEY_UNKNOWN,
                         CATEGORY
                 )

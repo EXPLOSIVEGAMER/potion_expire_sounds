@@ -5,7 +5,7 @@ import at.woodexplosive.potion_expire_sounds.sound.ModSounds;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.util.Identifier;
+import net.minecraft.resources.Identifier;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -43,39 +43,59 @@ public class ModConfig {
     private static final Path CONFIG_PATH = FabricLoader.getInstance()
             .getConfigDir().resolve(MOD_ID+".json");
 
+    public boolean enableMod = true;
+
     public boolean playExpireSound = true;
     public boolean playWarningSound = true;
     public boolean playWarningSound2 = true;
 
     public int warningThreshold = 200;
-    public float volume_expire = 1.0f;
-    public float volume_warning = 1.0f;
-    public float pitch_expire = 1.0f;
-    public float pitch_warning = 1.0f;
+    public float volumeExpire = 1.0f;
+    public float volumeWarning = 1.0f;
+    public float pitchExpire = 1.0f;
+    public float pitchWarning = 1.0f;
 
     // Filter
     public FilterType filterType = FilterType.BOTH;
     public ListType listType = ListType.BLACKLIST;
     public Map<String, Boolean> effectMap = new HashMap<>();
 
-    public Identifier soundPotionExpire = ModSounds.POTION_EXPIRE.id();
-    public Identifier soundPotionWarning = ModSounds.POTION_WARNING.id();
+    public Identifier soundPotionExpire = ModSounds.POTION_EXPIRE.location();
+    public Identifier soundPotionWarning = ModSounds.POTION_WARNING.location();
 
     // Potion Hud
     public boolean displayPotionHud = true;
     public boolean compactHud = false;
     public boolean showInfEffects = true;
     public int potionHudItemSize = 1;
-    public int potionHudX = 0;
-    public int potionHudY = 0;
+    public float potionHudX = 0.6f;
+    public float potionHudY = 0.9f;
+    public int textColor = 0xFFFFFFFF;
+    public boolean showIcons = true;
+    public boolean showText = true;
+    public float hudSize = 1.0f;
 
     // Combat Mode
     public Identifier soundStrengthExpire = null;
     public Identifier soundStrengthWarning = null;
+    public float soundStrengthExpireVolume = 1.0F;
+    public float soundStrengthExpirePitch = 1.0F;
+    public float soundStrengthWarningVolume = 1.0F;
+    public float soundStrengthWarningPitch = 1.0F;
+
     public Identifier soundSpeedExpire = null;
     public Identifier soundSpeedWarning = null;
+    public float soundSpeedExpireVolume = 1.0F;
+    public float soundSpeedExpirePitch = 1.0F;
+    public float soundSpeedWarningVolume = 1.0F;
+    public float soundSpeedWarningPitch = 1.0F;
+
     public Identifier soundFireResExpire = null;
     public Identifier soundFireResWarning = null;
+    public float soundFireResExpireVolume = 1.0F;
+    public float soundFireResExpirePitch = 1.0F;
+    public float soundFireResWarningVolume = 1.0F;
+    public float soundFireResWarningPitch = 1.0F;
 
     public static void load() {
         if (Files.exists(CONFIG_PATH)) {

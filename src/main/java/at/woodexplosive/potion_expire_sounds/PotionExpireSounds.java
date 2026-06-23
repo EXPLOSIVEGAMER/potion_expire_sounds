@@ -2,7 +2,7 @@ package at.woodexplosive.potion_expire_sounds;
 
 import at.woodexplosive.potion_expire_sounds.sound.ModSounds;
 import net.fabricmc.api.ModInitializer;
-import net.minecraft.util.Identifier;
+import net.minecraft.resources.Identifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,6 +19,6 @@ public class PotionExpireSounds implements ModInitializer {
     }
 
     public static Identifier id(String s) {
-        return Identifier.of(MOD_ID, s);
+        return Identifier.fromNamespaceAndPath(MOD_ID, s);
     }
 }
