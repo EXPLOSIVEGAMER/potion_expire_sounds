@@ -37,12 +37,12 @@ public class ConfirmScreen extends Screen {
         ButtonWidget confirm = ButtonWidget.builder(
                 Text.translatable(TRANSLATION_KEY + "btn.confirm").formatted(Formatting.GREEN),
                 btn -> this.onConfirm.accept(this, btn)
-        ).size(50, 25).position(this.width / 2 + 25, this.height / 2 - 25).build();
+        ).dimensions(this.width / 2 + 25, this.height / 2 - 25, 100, 25).build();
 
         ButtonWidget deny = ButtonWidget.builder(
                 Text.translatable(TRANSLATION_KEY + "btn.deny").formatted(Formatting.RED),
                 btn -> this.onDeny.accept(this, btn)
-        ).size(50, 25).position(this.width / 2 - 75, this.height / 2 - 25).build();
+        ).dimensions(this.width / 2 - 125, this.height / 2 - 25, 100, 25).build();
 
         this.addDrawableChild(confirm);
         this.addDrawableChild(deny);

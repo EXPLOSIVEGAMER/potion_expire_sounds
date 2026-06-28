@@ -13,6 +13,8 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import org.jspecify.annotations.NonNull;
 
+import java.awt.*;
+
 import static at.woodexplosive.potion_expire_sounds.PotionExpireSounds.MOD_ID;
 
 public class PresetScreen extends Screen {
@@ -44,7 +46,22 @@ public class PresetScreen extends Screen {
     protected void init() {
         super.init();
 
-        ButtonWidget loadBtn;
+        ButtonWidget.Builder loadBtn = ButtonWidget.builder(
+                        Text.translatable(TRANSLATION_KEY + "btn.load").formatted(Formatting.GREEN),
+                        btn -> new ConfirmScreen.Builder(Text.translatable(TRANSLATION_KEY + "load.title", this.displayName), this.parent)
+                                .onConfirm((s, btn2) -> {
+                                    applyPreset();
+                                    this.close();
+                                })
+                                .build()
+                                .open()
+                )
+                .size(100, 25);
+
+        ButtonWidget.Builder backBtn = ButtonWidget.builder(
+                        Text.translatable(TRANSLATION_KEY + "btn.back"),
+                        btn -> this.close()
+                ).size(100, 25);
 
         if (!BuiltInPresets.ALL.containsKey(fileName)) {
             ButtonWidget delete = ButtonWidget.builder(
@@ -58,53 +75,23 @@ public class PresetScreen extends Screen {
                                     .build()
                                     .open()
                     )
-                    .size(50, 25)
-                    .position(this.width / 2 - 75, this.height / 2 - 25)
+                    .size(100, 25)
+                    .position(this.width / 2 - 50, this.height / 2 + 12)
                     .build();
 
-            loadBtn = ButtonWidget.builder(
-                            Text.translatable(TRANSLATION_KEY + "btn.load").formatted(Formatting.GREEN),
-                            btn -> new ConfirmScreen.Builder(Text.translatable(TRANSLATION_KEY + "load.title", this.displayName), this.parent)
-                                    .onConfirm((s, btn2) -> {
-                                        applyPreset();
-                                        this.close();
-                                    })
-                                    .build()
-                                    .open()
-                    )
-                    .size(50, 25)
-                    .position(this.width / 2 + 25, this.height / 2 - 25)
-                    .build();
+            loadBtn.position(this.width / 2 - 50, this.height / 2 - 25);
+            backBtn.position(this.width / 2 - 50, this.height / 2 + 49);
 
             this.addDrawableChild(delete);
 
         } else {
 
-            loadBtn = ButtonWidget.builder(
-                            Text.translatable(TRANSLATION_KEY + "btn.load").formatted(Formatting.GREEN),
-                            btn -> new ConfirmScreen.Builder(Text.translatable(TRANSLATION_KEY + "load.title", this.displayName), this.parent)
-                                    .onConfirm((s, btn2) -> {
-                                        applyPreset();
-                                        this.close();
-                                    })
-                                    .build()
-                                    .open()
-                    )
-                    .size(50, 25)
-                    .position(this.width / 2 - 25, this.height / 2 - 25)
-                    .build();
+            loadBtn.position(this.width / 2 - 50, this.height / 2 - 25);
+            backBtn.position(this.width / 2 - 50, this.height / 2 + 15);
         }
 
-        ButtonWidget back = ButtonWidget.builder(
-                        Text.translatable(TRANSLATION_KEY + "btn.back"),
-                        btn -> this.close()
-                )
-                .size(50, 25)
-                .position(this.width / 2 - 25, this.height / 2 + 15)
-                .build();
-
-        this.addDrawableChild(loadBtn);
-        this.addDrawableChild(back);
+        this.addDrawableChild(loadBtn.build());
+        this.addDrawableChild(backBtn.build());
     }
 
     @Override
@@ -194,6 +181,7 @@ public class PresetScreen extends Screen {
                     this.width / 2 - 100, this.height / 2 - 50,
                     200, 25,
                     Text.empty());
+            textBox.setPlaceholder(Text.translatable(TRANSLATION_KEY + "create.hint"));
 
             ButtonWidget createBtn = ButtonWidget.builder(Text.translatable(TRANSLATION_KEY + "create"), btn -> {
                         String name = textBox.getText().trim();

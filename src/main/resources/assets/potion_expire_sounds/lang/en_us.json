@@ -29,6 +29,7 @@
   "gui.potion_expire_sounds.presets.delete.title": "Delete preset '%s'?",
   "gui.potion_expire_sounds.presets.create.title": "Create Preset",
   "gui.potion_expire_sounds.presets.create": "Create",
+  "gui.potion_expire_sounds.presets.create.hint": "Enter Preset Name here...",
 
   "gui.potion_expire_sounds.import.title": "Import Presets",
   "gui.potion_expire_sounds.import.hint": "Drop .json preset files here",
