@@ -16,6 +16,28 @@
 
   "hud.potion_expire_sounds.potion_hud.compact_hud.tooltip": "+%s Effects",
 
+  "gui.potion_expire_sounds.confirm_screen.btn.confirm": "Confirm",
+  "gui.potion_expire_sounds.confirm_screen.btn.deny": "Deny",
+
+  "gui.potion_expire_sounds.presets.overwrite.title": "Overwrite Preset: %s",
+
+  "gui.potion_expire_sounds.presets.title": "Preset: %s",
+  "gui.potion_expire_sounds.presets.btn.load": "Load",
+  "gui.potion_expire_sounds.presets.btn.delete": "Delete",
+  "gui.potion_expire_sounds.presets.btn.back": "Back",
+  "gui.potion_expire_sounds.presets.load.title": "Load preset '%s'?",
+  "gui.potion_expire_sounds.presets.delete.title": "Delete preset '%s'?",
+  "gui.potion_expire_sounds.presets.create.title": "Create Preset",
+  "gui.potion_expire_sounds.presets.create": "Create",
+
+  "gui.potion_expire_sounds.import.title": "Import Presets",
+  "gui.potion_expire_sounds.import.hint": "Drop .json preset files here",
+  "gui.potion_expire_sounds.import.success": "Imported %s preset(s)",
+  "gui.potion_expire_sounds.import.fail": "No valid .json files dropped",
+  "gui.potion_expire_sounds.import.btn.back": "Back",
+
+  "gui.potion_expire_sounds.reset": "Reset Button",
+
   "config.potion_expire_sounds.enable_mod": "Enable Mod",
   "config.potion_expire_sounds.enable_mod.desc": "Enables or disables the entire mod. When disabled, no sounds are played and the HUD is hidden.",
 
@@ -46,12 +68,14 @@
   "config.potion_expire_sounds.potion_hud.toggle": "Potion HUD",
   "config.potion_expire_sounds.potion_hud.toggle.desc": "Shows or hides the Potion HUD above the hotbar.",
   "config.potion_expire_sounds.potion_hud.open_editor": "Potion Hud Editor",
+  "config.potion_expire_sounds.potion_hud.open_editor.open": "Open Editor",
   "config.potion_expire_sounds.potion_hud.open_editor.desc": "Opens the drag-and-drop editor to reposition the Potion HUD on screen.",
 
   "config.potion_expire_sounds.category.general": "General",
   "config.potion_expire_sounds.category.advanced": "Advanced",
   "config.potion_expire_sounds.category.effects": "Effects",
   "config.potion_expire_sounds.category.combat": "Combat",
+  "config.potion_expire_sounds.category.presets": "Presets",
 
   "config.potion_expire_sounds.effect_list.desc": "Effects",
   "config.potion_expire_sounds.filter.desc": "Filter Settings",
@@ -112,5 +136,17 @@
   "config.potion_expire_sounds.combat.sound.fire_res.warning.pitch": "Warning Pitch",
   "config.potion_expire_sounds.combat.sound.fire_res.warning.pitch.desc": "Pitch of the sound played when Fire Resistance crosses the warning threshold.",
 
-  "gui.potion_expire_sounds.reset": "Reset Button"
+  "config.potion_expire_sounds.group.builtin_presets": "Built-in Presets",
+  "config.potion_expire_sounds.group.save_preset": "Manage Presets",
+  "config.potion_expire_sounds.group.presets": "Saved Presets",
+  "config.potion_expire_sounds.preset.name": "Preset Name",
+  "config.potion_expire_sounds.preset.save": "Save as Preset",
+  "config.potion_expire_sounds.preset.save.desc": "Saves your current configuration as a named preset file.",
+  "config.potion_expire_sounds.preset.import": "Import Preset",
+  "config.potion_expire_sounds.preset.import.desc": "Opens an import screen where you can drag and drop .json preset files to import them.",
+  "config.potion_expire_sounds.preset.open_folder": "Open Presets Folder",
+  "config.potion_expire_sounds.preset.open_folder.desc": "Opens the presets folder in your system file explorer.",
+  "config.potion_expire_sounds.presets.select": "",
+  "config.potion_expire_sounds.presets.builtin.desc": "A built-in preset. Click to open and load it.",
+  "config.potion_expire_sounds.presets.user.desc": "A saved preset. Click to open, load, or delete it."
 }
