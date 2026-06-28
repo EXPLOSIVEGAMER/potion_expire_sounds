@@ -1,5 +1,9 @@
 package at.woodexplosive.potion_expire_sounds.config;
 
+import at.woodexplosive.potion_expire_sounds.PotionExpireSounds;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffects;
+
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -19,6 +23,12 @@ public class BuiltInPresets {
         c.playWarningSound2 = false;
         c.pitchWarning = 0.5f;
         c.pitchExpire = 1.3f;
+        c.listType = ModConfig.ListType.WHITELIST;
+        c.effectMap = Map.of(
+                "effect.minecraft.strength", true,
+                "effect.minecraft.speed", true,
+                "effect.minecraft.fire_resistance", true
+        );
 
         return c;
     }
