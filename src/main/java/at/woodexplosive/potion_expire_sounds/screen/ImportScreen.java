@@ -32,7 +32,7 @@ public class ImportScreen extends Screen {
         this.addRenderableWidget(Button.builder(
                 Component.translatable(TK + "btn.back"),
                 _ -> this.onClose()
-        ).size(100, 25).pos(this.width / 2 - 50, this.height / 2 + 40).build());
+        ).bounds(this.width / 2 - 50, this.height / 2 + 40, 100, 25).build());
     }
 
     @Override

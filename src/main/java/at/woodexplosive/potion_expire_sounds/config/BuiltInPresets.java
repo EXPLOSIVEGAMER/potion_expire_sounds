@@ -9,5 +9,17 @@ public class BuiltInPresets {
 
     static {
         ALL.put("Default", new ModConfig());
+        ALL.put("PVP", pvp());
+    }
+
+    private static ModConfig pvp() {
+        ModConfig c = new ModConfig();
+
+        c.warningThreshold = 200;
+        c.playWarningSound2 = false;
+        c.pitchWarning = 0.5f;
+        c.pitchExpire = 1.3f;
+
+        return c;
     }
 }

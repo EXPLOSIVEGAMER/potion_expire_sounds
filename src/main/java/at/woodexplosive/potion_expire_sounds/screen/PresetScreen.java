@@ -1,6 +1,5 @@
 package at.woodexplosive.potion_expire_sounds.screen;
 
-import at.woodexplosive.potion_expire_sounds.PotionExpireSounds;
 import at.woodexplosive.potion_expire_sounds.config.BuiltInPresets;
 import at.woodexplosive.potion_expire_sounds.config.ModConfig;
 import at.woodexplosive.potion_expire_sounds.config.ModConfigScreen;
@@ -44,7 +43,21 @@ public class PresetScreen extends Screen {
     protected void init() {
         super.init();
 
-        Button loadBtn;
+        Button.Builder loadBtn = Button.builder(
+                        Component.translatable(TRANSLATION_KEY + "btn.load").withColor(TextColor.GREEN),
+                        _ -> new ConfirmScreen.Builder(Component.translatable(TRANSLATION_KEY + "load.title", this.displayName), this.parent)
+                                .onConfirm((_, _) -> {
+                                    applyPreset();
+                                    this.onClose();
+                                })
+                                .build()
+                                .open())
+                .size(100, 25);
+
+        Button.Builder back = Button.builder(
+                        Component.translatable(TRANSLATION_KEY + "btn.back"),
+                        _ -> this.onClose()
+                ).size(100, 25);
 
         if (!BuiltInPresets.ALL.containsKey(fileName)) {
             Button delete = Button.builder(
@@ -58,53 +71,23 @@ public class PresetScreen extends Screen {
                                     .build()
                                     .open()
                     )
-                    .size(50, 25)
-                    .pos(this.width / 2 - 75, this.height / 2 - 25)
+                    .bounds(this.width / 2 - 50, this.height / 2 + 12, 100, 25)
                     .build();
 
-            loadBtn = Button.builder(
-                            Component.translatable(TRANSLATION_KEY + "btn.load").withColor(TextColor.GREEN),
-                            _ -> new ConfirmScreen.Builder(Component.translatable(TRANSLATION_KEY + "load.title", this.displayName), this.parent)
-                                    .onConfirm((_, _) -> {
-                                        applyPreset();
-                                        this.onClose();
-                                    })
-                                    .build()
-                                    .open()
-                    )
-                    .size(50, 25)
-                    .pos(this.width / 2 + 25, this.height / 2 - 25)
-                    .build();
+            loadBtn.pos(this.width / 2 - 50, this.height / 2 - 25);
+
+            back.pos(this.width / 2 - 50, this.height / 2 + 49);
 
             this.addRenderableWidget(delete);
 
         } else {
 
-            loadBtn = Button.builder(
-                            Component.translatable(TRANSLATION_KEY + "btn.load").withColor(TextColor.GREEN),
-                            _ -> new ConfirmScreen.Builder(Component.translatable(TRANSLATION_KEY + "load.title", this.displayName), this.parent)
-                                    .onConfirm((_, _) -> {
-                                        applyPreset();
-                                        this.onClose();
-                                    })
-                                    .build()
-                                    .open()
-                    )
-                    .size(50, 25)
-                    .pos(this.width / 2 - 25, this.height / 2 - 25)
-                    .build();
+            loadBtn.pos(this.width / 2 - 50, this.height / 2 - 25);
+            back.pos(this.width / 2 - 50, this.height / 2 + 15);
         }
 
-        Button back = Button.builder(
-                        Component.translatable(TRANSLATION_KEY + "btn.back"),
-                        _ -> this.onClose()
-                )
-                .size(50, 25)
-                .pos(this.width / 2 - 25, this.height / 2 + 15)
-                .build();
-
-        this.addRenderableWidget(loadBtn);
-        this.addRenderableWidget(back);
+        this.addRenderableWidget(loadBtn.build());
+        this.addRenderableWidget(back.build());
     }
 
     @Override
@@ -194,6 +177,8 @@ public class PresetScreen extends Screen {
                     this.width / 2 - 100, this.height / 2 - 50,
                     200, 25,
                     Component.empty());
+            textBox.setMaxLength(32);
+            textBox.setHint(Component.translatable(TRANSLATION_KEY + "create.hint"));
 
             Button createBtn = Button.builder(Component.translatable(TRANSLATION_KEY + "create"), _ -> {
                         String name = textBox.getValue().trim();
@@ -213,19 +198,25 @@ public class PresetScreen extends Screen {
                             else this.onClose();
                         }
                     })
-                    .size(100, 25)
-                    .pos(this.width / 2 - 50, this.height / 2)
+                    .bounds(this.width / 2 - 50, this.height / 2 - 15, 100, 25)
                     .build();
 
             Button back = Button.builder(Component.translatable(TRANSLATION_KEY + "btn.back"),
-                    _ -> this.onClose())
+                            _ -> this.onClose())
                     .size(50, 25)
-                    .pos(this.width / 2 - 25, this.height / 2 + 40)
+                    .pos(this.width / 2 - 25, this.height / 2 + 20)
                     .build();
 
             this.addRenderableWidget(back);
             this.addRenderableWidget(textBox);
             this.addRenderableWidget(createBtn);
+        }
+
+        @Override
+        public void extractRenderState(@NonNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
+            super.extractRenderState(graphics, mouseX, mouseY, a);
+
+            graphics.centeredText(client.font, this.title, this.width / 2, this.height / 2 - 75, 0xFFFFFFFF);
         }
 
         @Override

@@ -38,16 +38,14 @@ public class ConfirmScreen extends Screen {
                 Component.translatable(TRANSLATION_KEY + "btn.confirm").withColor(TextColor.GREEN),
                         btn -> this.onConfirm.accept(this, btn)
                 )
-                .size(50, 25)
-                .pos(this.width / 2 + 25, this.height / 2 - 25)
+                .bounds(this.width / 2 + 25, this.height / 2 - 25, 100, 25)
                 .build();
 
         Button deny = Button.builder(
                         Component.translatable(TRANSLATION_KEY + "btn.deny").withColor(TextColor.RED),
                         btn -> this.onDeny.accept(this, btn)
                 )
-                .size(50, 25)
-                .pos(this.width / 2 - 75, this.height / 2 - 25)
+                .bounds(this.width / 2 - 125, this.height / 2 - 25, 100, 25)
                 .build();
 
         this.addRenderableWidget(confirm);
