@@ -198,10 +198,20 @@ public class PresetScreen extends Screen {
             Button createBtn = Button.builder(Component.translatable(TRANSLATION_KEY + "create"), _ -> {
                         String name = textBox.getValue().trim();
                         if (name.isEmpty()) return;
-                        ModConfig.savePreset(name);
-                        PotionExpireSounds.LOGGER.info(name);
-                        if (this.onRefresh != null) this.onRefresh.run();
-                        else this.onClose();
+                        if (ModConfig.getPresets().contains(name + ".json")) {
+                            new ConfirmScreen.Builder(Component.translatable(TRANSLATION_KEY + "overwrite.title", name), this.parent)
+                                    .onConfirm((_, _) -> {
+                                        ModConfig.savePreset(name);
+                                        if (this.onRefresh != null) this.onRefresh.run();
+                                        else this.onClose();
+                                    })
+                                    .build()
+                                    .open();
+                        } else {
+                            ModConfig.savePreset(name);
+                            if (this.onRefresh != null) this.onRefresh.run();
+                            else this.onClose();
+                        }
                     })
                     .size(100, 25)
                     .pos(this.width / 2 - 50, this.height / 2)

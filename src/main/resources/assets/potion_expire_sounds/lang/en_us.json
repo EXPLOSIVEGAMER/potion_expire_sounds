@@ -29,6 +29,8 @@
   "gui.potion_expire_sounds.confirm_screen.btn.confirm": "Confirm",
   "gui.potion_expire_sounds.confirm_screen.btn.deny": "Deny",
 
+  "gui.potion_expire_sounds.presets.overwrite.title": "Overwrite Preset: %s",
+
   "hud.potion_expire_sounds.potion_hud.compact_hud.tooltip": "+%s Effects",
 
   "config.potion_expire_sounds.enable_mod": "Enable Mod",
