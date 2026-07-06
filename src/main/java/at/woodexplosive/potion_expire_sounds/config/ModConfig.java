@@ -116,9 +116,12 @@ public class ModConfig {
     }
 
     public static void save() {
-        try (Writer writer = Files.newBufferedWriter(CONFIG_PATH.resolve(MOD_ID+".json"))) {
-            new GsonBuilder().setPrettyPrinting().create().toJson(INSTANCE, writer);
-        } catch (IOException e) {
+        try {
+            Files.createDirectories(CONFIG_PATH);
+            try (Writer writer = Files.newBufferedWriter(CONFIG_PATH.resolve(MOD_ID + ".json"))) {
+                new GsonBuilder().setPrettyPrinting().create().toJson(INSTANCE, writer);
+            }
+        } catch(IOException e){
             PotionExpireSounds.LOGGER.error("Error while saving Config!", e);
         }
     }
