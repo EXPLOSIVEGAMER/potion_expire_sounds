@@ -339,7 +339,7 @@ public class PotionHudEditScreen extends Screen {
         public void renderBackground(DrawContext context, int mouseX, int mouseY, float deltaTicks) {
             super.renderBackground(context, mouseX, mouseY, deltaTicks);
             enableScissor(context);
-            this.renderDarkening(context, this.x, this.y, this.width, this.height);
+            context.fill(this.x, this.y, this.width, this.height, 0xC0101010);
             context.disableScissor();
         }
 
