@@ -50,7 +50,7 @@ public class PotionExpireSoundsClient implements ClientModInitializer {
     private void openConfig(Minecraft client) {
         if (client.player == null || !openConfig.consumeClick()) return;
 
-        client.gui.setScreen(ModConfigScreen.createScreen(client.gui.screen()));
+        client.setScreen(ModConfigScreen.createScreen(client.screen));
 
     }
 

@@ -62,6 +62,6 @@ public class ImportScreen extends Screen {
 
     @Override
     public void onClose() {
-        client.gui.setScreen(parent);
+        client.setScreen(parent);
     }
 }

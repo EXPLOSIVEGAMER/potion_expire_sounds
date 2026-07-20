@@ -9,7 +9,6 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextColor;
 import org.jspecify.annotations.NonNull;
 
 import static at.woodexplosive.potion_expire_sounds.PotionExpireSounds.MOD_ID;
@@ -44,7 +43,7 @@ public class PresetScreen extends Screen {
         super.init();
 
         Button.Builder loadBtn = Button.builder(
-                        Component.translatable(TRANSLATION_KEY + "btn.load").withColor(TextColor.GREEN),
+                        Component.translatable(TRANSLATION_KEY + "btn.load").withColor(0xff00ff00),
                         _ -> new ConfirmScreen.Builder(Component.translatable(TRANSLATION_KEY + "load.title", this.displayName), this.parent)
                                 .onConfirm((_, _) -> {
                                     applyPreset();
@@ -61,7 +60,7 @@ public class PresetScreen extends Screen {
 
         if (!BuiltInPresets.ALL.containsKey(fileName)) {
             Button delete = Button.builder(
-                            Component.translatable(TRANSLATION_KEY + "btn.delete").withColor(TextColor.RED),
+                            Component.translatable(TRANSLATION_KEY + "btn.delete").withColor(0xffff0000),
                             _ -> new ConfirmScreen.Builder(Component.translatable(TRANSLATION_KEY + "delete.title", this.displayName), this.parent)
                                     .onConfirm((_, _) -> {
                                         ModConfig.deletePreset(this.fileName);
@@ -97,11 +96,11 @@ public class PresetScreen extends Screen {
     }
 
     public void open() {
-        client.gui.setScreen(this);
+        client.setScreen(this);
     }
 
     public static void openCreateScreen(Screen parent, Runnable onRefresh) {
-        client.gui.setScreen(new CreateScreen(parent, onRefresh));
+        client.setScreen(new CreateScreen(parent, onRefresh));
     }
 
     public void applyPreset() {
@@ -156,7 +155,7 @@ public class PresetScreen extends Screen {
     @Override
     public void onClose() {
         if (this.parent instanceof PresetScreen) super.onClose();
-        client.gui.setScreen(this.parent);
+        client.setScreen(this.parent);
     }
 
     private static class CreateScreen extends Screen {
@@ -222,7 +221,7 @@ public class PresetScreen extends Screen {
         @Override
         public void onClose() {
             if (this.parent instanceof CreateScreen) super.onClose();
-            client.gui.setScreen(this.parent);
+            client.setScreen(this.parent);
         }
     }
 }

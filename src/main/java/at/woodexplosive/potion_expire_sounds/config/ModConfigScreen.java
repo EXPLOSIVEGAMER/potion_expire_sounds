@@ -189,8 +189,8 @@ public class ModConfigScreen {
                                 .name(Component.translatable(CP + "potion_hud.open_editor"))
                                 .description(OptionDescription.of(Component.translatable(CP + "potion_hud.open_editor.desc")))
                                 .text(Component.translatable(CP + "potion_hud.open_editor.open"))
-                                .action((_, _) -> Minecraft.getInstance().gui.setScreen(
-                                        new PotionHudEditScreen(Minecraft.getInstance().gui.screen())))
+                                .action((_, _) -> Minecraft.getInstance().setScreen(
+                                        new PotionHudEditScreen(Minecraft.getInstance().screen)))
                                 .build())
                         .build())
                 .group(OptionGroup.createBuilder()
@@ -301,7 +301,7 @@ public class ModConfigScreen {
     }
 
     private static ConfigCategory buildPresetCategory(Refs refs, Screen grandParent) {
-        Runnable refresh = () -> Minecraft.getInstance().gui.setScreen(createScreen(grandParent));
+        Runnable refresh = () -> Minecraft.getInstance().setScreen(createScreen(grandParent));
 
         ButtonOption saveButton = ButtonOption.createBuilder()
                 .name(Component.translatable(CP + "preset.save"))
@@ -321,7 +321,7 @@ public class ModConfigScreen {
                 .name(Component.translatable(CP + "preset.import"))
                 .description(OptionDescription.of(Component.translatable(CP + "preset.import.desc")))
                 .text(Component.empty())
-                .action((screen, _) -> Minecraft.getInstance().gui.setScreen(new ImportScreen(screen, refresh)))
+                .action((screen, _) -> Minecraft.getInstance().setScreen(new ImportScreen(screen, refresh)))
                 .build();
 
         OptionGroup.Builder builtInGroup = OptionGroup.createBuilder()

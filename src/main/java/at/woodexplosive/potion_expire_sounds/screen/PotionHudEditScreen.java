@@ -6,7 +6,7 @@ import at.woodexplosive.potion_expire_sounds.config.ModConfig;
 import at.woodexplosive.potion_expire_sounds.config.custom.RangedSliderWidget;
 import at.woodexplosive.potion_expire_sounds.config.custom.ResetButtonWidget;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
-import net.minecraft.client.gui.Hud;
+import net.minecraft.client.gui.Gui;
 import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.RenderPipelines;
@@ -73,7 +73,7 @@ public class PotionHudEditScreen extends Screen {
                     if (!(this instanceof SettingsScreen)) {
                         SettingsScreen screen = new SettingsScreen(this,
                                 10, 25, 284, 152);
-                        this.minecraft.gui.setScreen(screen);
+                        this.minecraft.setScreen(screen);
                     } else {
                         this.onClose();
                     }
@@ -110,8 +110,8 @@ public class PotionHudEditScreen extends Screen {
         graphics.text(font, Component.literal(textSpeed + ": 2m 20s"), 26, 24, ModConfig.INSTANCE.textColor, true);
 
         if (ModConfig.INSTANCE.showIcons) {
-            graphics.blitSprite(RenderPipelines.GUI_TEXTURED, Hud.getMobEffectSprite(MobEffects.SPEED), 4, 20, 18, 18);
-            graphics.blitSprite(RenderPipelines.GUI_TEXTURED, Hud.getMobEffectSprite(MobEffects.STRENGTH), 4, 2, 18, 18);
+            graphics.blitSprite(RenderPipelines.GUI_TEXTURED, Gui.getMobEffectSprite(MobEffects.SPEED), 4, 20, 18, 18);
+            graphics.blitSprite(RenderPipelines.GUI_TEXTURED, Gui.getMobEffectSprite(MobEffects.STRENGTH), 4, 2, 18, 18);
         }
 
         graphics.pose().popMatrix();
@@ -158,7 +158,7 @@ public class PotionHudEditScreen extends Screen {
         this.toConfig();
         ModConfig.save();
         if (parent instanceof PotionHudEditScreen && !(parent instanceof SettingsScreen)) super.onClose();
-        this.minecraft.gui.setScreen(parent);
+        this.minecraft.setScreen(parent);
     }
 
     protected void drawBoarder(GuiGraphicsExtractor graphics, int x, int y, int x2, int y2, int color) {
@@ -361,8 +361,8 @@ public class PotionHudEditScreen extends Screen {
         public void onClose() {
             configWidgets.forEach(ConfigWidget::save);
             configWidgets.clear();
-            if (parent instanceof SettingsScreen) minecraft.gui.setScreen(null);
-            minecraft.gui.setScreen(parent);
+            if (parent instanceof SettingsScreen) minecraft.setScreen(null);
+            minecraft.setScreen(parent);
         }
 
         private void enableScissor(GuiGraphicsExtractor graphics) {

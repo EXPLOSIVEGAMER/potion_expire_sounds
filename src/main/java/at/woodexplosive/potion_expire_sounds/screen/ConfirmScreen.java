@@ -5,7 +5,6 @@ import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextColor;
 import org.jspecify.annotations.NonNull;
 
 import java.util.function.BiConsumer;
@@ -35,14 +34,14 @@ public class ConfirmScreen extends Screen {
         super.init();
 
         Button confirm = Button.builder(
-                Component.translatable(TRANSLATION_KEY + "btn.confirm").withColor(TextColor.GREEN),
+                Component.translatable(TRANSLATION_KEY + "btn.confirm").withColor(0xff00ff00),
                         btn -> this.onConfirm.accept(this, btn)
                 )
                 .bounds(this.width / 2 + 25, this.height / 2 - 25, 100, 25)
                 .build();
 
         Button deny = Button.builder(
-                        Component.translatable(TRANSLATION_KEY + "btn.deny").withColor(TextColor.RED),
+                        Component.translatable(TRANSLATION_KEY + "btn.deny").withColor(0xffff0000),
                         btn -> this.onDeny.accept(this, btn)
                 )
                 .bounds(this.width / 2 - 125, this.height / 2 - 25, 100, 25)
@@ -62,11 +61,11 @@ public class ConfirmScreen extends Screen {
     public void onClose() {
         if (parent instanceof ConfirmScreen) super.onClose();
         this.onClose.accept(this);
-        client.gui.setScreen(this.parent);
+        client.setScreen(this.parent);
     }
 
     public void open() {
-        client.gui.setScreen(this);
+        client.setScreen(this);
     }
 
     public static class Builder {

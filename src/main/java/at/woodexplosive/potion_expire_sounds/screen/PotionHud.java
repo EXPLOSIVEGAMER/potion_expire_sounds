@@ -8,8 +8,8 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElement;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
-import net.minecraft.client.gui.Hud;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -113,7 +113,7 @@ public class PotionHud implements HudElement {
         String duration = effect.isInfiniteDuration() ? "∞" : TimeUtil.formatDuration(effect.getDuration());
         String text = String.format("%s:%s %s", ModConfig.INSTANCE.showText ? effect.getEffect().value().getDisplayName().getString() : "", formatAmplifier(effect.getAmplifier()), duration);
 
-        if (ModConfig.INSTANCE.showIcons) graphics.blitSprite(RenderPipelines.GUI_TEXTURED, Hud.getMobEffectSprite(effect.getEffect()), 4, y, 18, 18);
+        if (ModConfig.INSTANCE.showIcons) graphics.blitSprite(RenderPipelines.GUI_TEXTURED, Gui.getMobEffectSprite(effect.getEffect()), 4, y, 18, 18);
         graphics.text(client.font, Component.literal(text), 26, y + 4, ModConfig.INSTANCE.textColor, true);
     }
 
