@@ -340,7 +340,7 @@ public class PotionHudEditScreen extends Screen {
         public void extractRenderState(@NonNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float deltaTick) {
             super.extractRenderState(graphics, mouseX, mouseY, deltaTick);
             enableScissor(graphics);
-            this.drawBoarder(graphics, this.x, this.y, this.width - 1, this.height - 1, 0xFFFFFFFF);
+            this.drawBoarder(graphics, this.x, this.y, this.width - 1,this.height - 1, 0xFFFFFFFF);
             // Text Color Input
             graphics.text(this.font, Component.literal("0x"), this.x + 5, this.y + 7, 0xFFFFFFFF, true);
             graphics.text(this.font, Component.translatable(TRANSLATION_PATH + "hud_text_color"), this.x + 92, this.y + 7, 0xFFFFFFFF, true);
@@ -353,7 +353,7 @@ public class PotionHudEditScreen extends Screen {
         public void extractBackground(@NonNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float deltaTick) {
             super.extractBackground(graphics, mouseX, mouseY, deltaTick);
             enableScissor(graphics);
-            graphics.fill(this.x, this.y, this.x + this.width, this.y + this.height, 0xC0101010);
+            graphics.fill(this.x, this.y, this.width, this.height, 0xC0101010);
             graphics.disableScissor();
         }
 
