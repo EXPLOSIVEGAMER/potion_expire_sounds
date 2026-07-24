@@ -1,5 +1,6 @@
 package at.woodexplosive.potion_expire_sounds.config;
 
+import at.woodexplosive.potion_expire_sounds.config.custom.EffectOverrideControllerBuilder;
 import at.woodexplosive.potion_expire_sounds.config.custom.SoundControllerBuilder;
 import at.woodexplosive.potion_expire_sounds.screen.ImportScreen;
 import at.woodexplosive.potion_expire_sounds.screen.PotionHudEditScreen;
@@ -15,6 +16,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -59,6 +61,8 @@ public class ModConfigScreen {
         public Option<String> soundFireResExpire, soundFireResWarning;
         public Option<Float> soundFireResExpireVolume, soundFireResExpirePitch,
                 soundFireResWarningVolume, soundFireResWarningPitch;
+        // Effect Overrides
+        public Option<List<EffectSoundOverride>> effectSoundOverrides;
     }
 
     public static Screen createScreen(Screen parent) {
@@ -69,6 +73,7 @@ public class ModConfigScreen {
                 .category(buildAdvancedCategory(refs))
                 .category(buildEffectsCategory(refs))
                 .category(buildCombatCategory(refs))
+                .category(buildEffectOverridesCategory(refs))
                 .category(buildPresetCategory(refs, parent))
                 .save(ModConfig::save)
                 .build()
@@ -295,6 +300,24 @@ public class ModConfigScreen {
                         .option(refs.soundFireResExpireVolume).option(refs.soundFireResExpirePitch)
                         .option(refs.soundFireResWarningVolume).option(refs.soundFireResWarningPitch)
                         .build())
+                .build();
+    }
+
+    private static ConfigCategory buildEffectOverridesCategory(Refs refs) {
+        ListOption<EffectSoundOverride> listOption = ListOption.<EffectSoundOverride>createBuilder()
+                .name(Text.translatable(CP + "effect_overrides.list"))
+                .description(OptionDescription.of(Text.translatable(CP + "effect_overrides.list.desc")))
+                .binding(new ArrayList<>(),
+                        () -> ModConfig.INSTANCE.effectSoundOverrides,
+                        v -> ModConfig.INSTANCE.effectSoundOverrides = v)
+                .initial(EffectSoundOverride::new)
+                .controller(EffectOverrideControllerBuilder::create)
+                .build();
+        refs.effectSoundOverrides = listOption;
+
+        return ConfigCategory.createBuilder()
+                .name(Text.translatable(CP + "category.effect_overrides"))
+                .group(listOption)
                 .build();
     }
 

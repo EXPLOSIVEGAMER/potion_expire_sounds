@@ -2,6 +2,7 @@ package at.woodexplosive.potion_expire_sounds.screen;
 
 import at.woodexplosive.potion_expire_sounds.PotionExpireSounds;
 import at.woodexplosive.potion_expire_sounds.config.BuiltInPresets;
+import at.woodexplosive.potion_expire_sounds.config.EffectSoundOverride;
 import at.woodexplosive.potion_expire_sounds.config.ModConfig;
 import at.woodexplosive.potion_expire_sounds.config.ModConfigScreen;
 import net.minecraft.client.MinecraftClient;
@@ -155,6 +156,11 @@ public class PresetScreen extends Screen {
         this.refs.soundFireResExpirePitch.requestSet(this.cfg.soundFireResExpirePitch);
         this.refs.soundFireResWarningVolume.requestSet(this.cfg.soundFireResWarningVolume);
         this.refs.soundFireResWarningPitch.requestSet(this.cfg.soundFireResWarningPitch);
+
+        this.refs.effectSoundOverrides.requestSet((this.cfg.effectSoundOverrides != null
+                        ? this.cfg.effectSoundOverrides.stream() : java.util.stream.Stream.<EffectSoundOverride>empty())
+                .map(EffectSoundOverride::copy)
+                .collect(java.util.stream.Collectors.toCollection(java.util.ArrayList::new)));
     }
 
     @Override

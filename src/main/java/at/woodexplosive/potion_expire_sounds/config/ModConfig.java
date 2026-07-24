@@ -12,6 +12,7 @@ import java.io.Reader;
 import java.io.Writer;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -97,6 +98,9 @@ public class ModConfig {
     public float soundFireResExpirePitch = 1.0F;
     public float soundFireResWarningVolume = 1.0F;
     public float soundFireResWarningPitch = 1.0F;
+
+    // Effect Overrides (dynamic per-effect sound list)
+    public List<EffectSoundOverride> effectSoundOverrides = new ArrayList<>();
 
     public static void load() {
         if (Files.exists(CONFIG_PATH)) {

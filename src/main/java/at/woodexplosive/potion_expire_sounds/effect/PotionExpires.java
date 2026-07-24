@@ -1,5 +1,6 @@
 package at.woodexplosive.potion_expire_sounds.effect;
 
+import at.woodexplosive.potion_expire_sounds.config.EffectSoundOverride;
 import at.woodexplosive.potion_expire_sounds.config.ModConfig;
 import at.woodexplosive.potion_expire_sounds.sound.ModSounds;
 import net.fabricmc.api.EnvType;
@@ -12,6 +13,7 @@ import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.sound.SoundEvent;
+import net.minecraft.util.Identifier;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -91,7 +93,23 @@ public class PotionExpires implements ClientTickEvents.StartTick {
         lastDurations.keySet().removeIf(type -> player.getStatusEffect(type) == null);
     }
 
+    private EffectSoundOverride findOverride(StatusEffectInstance effect) {
+        String translationKey = effect.getTranslationKey();
+        for (EffectSoundOverride override : ModConfig.INSTANCE.effectSoundOverrides) {
+            if (translationKey.equals(override.effectId)) {
+                return override;
+            }
+        }
+        return null;
+    }
+
     private SoundEvent getExpireSound(StatusEffectInstance effect) {
+        EffectSoundOverride override = findOverride(effect);
+        if (override != null && override.expireSound != null && !override.expireSound.isEmpty()) {
+            Identifier id = Identifier.tryParse(override.expireSound);
+            if (id != null) return SoundEvent.of(id);
+        }
+
         if (effect.getEffectType().equals(StatusEffects.STRENGTH) && ModConfig.INSTANCE.soundStrengthExpire != null)
             return SoundEvent.of(ModConfig.INSTANCE.soundStrengthExpire);
         if (effect.getEffectType().equals(StatusEffects.SPEED) && ModConfig.INSTANCE.soundSpeedExpire != null)
@@ -103,6 +121,12 @@ public class PotionExpires implements ClientTickEvents.StartTick {
     }
 
     private SoundEvent getWarningSound(StatusEffectInstance effect) {
+        EffectSoundOverride override = findOverride(effect);
+        if (override != null && override.warningSound != null && !override.warningSound.isEmpty()) {
+            Identifier id = Identifier.tryParse(override.warningSound);
+            if (id != null) return SoundEvent.of(id);
+        }
+
         if (effect.getEffectType().equals(StatusEffects.STRENGTH) && ModConfig.INSTANCE.soundStrengthWarning != null)
             return SoundEvent.of(ModConfig.INSTANCE.soundStrengthWarning);
         if (effect.getEffectType().equals(StatusEffects.SPEED) && ModConfig.INSTANCE.soundSpeedWarning != null)
@@ -116,6 +140,14 @@ public class PotionExpires implements ClientTickEvents.StartTick {
     private float[] getVolumeAndPitch(StatusEffectInstance effect, boolean isExpire) {
         float volume = isExpire ? ModConfig.INSTANCE.volumeExpire : ModConfig.INSTANCE.volumeWarning;
         float pitch = isExpire ? ModConfig.INSTANCE.pitchExpire : ModConfig.INSTANCE.pitchWarning;
+
+        EffectSoundOverride override = findOverride(effect);
+        if (override != null) {
+            String relevantSound = isExpire ? override.expireSound : override.warningSound;
+            if (relevantSound != null && !relevantSound.isEmpty()) {
+                return new float[]{override.volume, override.pitch};
+            }
+        }
 
         RegistryEntry<StatusEffect> type = effect.getEffectType();
 
