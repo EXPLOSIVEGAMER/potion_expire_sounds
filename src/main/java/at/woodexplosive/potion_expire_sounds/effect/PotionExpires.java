@@ -1,5 +1,6 @@
 package at.woodexplosive.potion_expire_sounds.effect;
 
+import at.woodexplosive.potion_expire_sounds.config.EffectSoundOverride;
 import at.woodexplosive.potion_expire_sounds.config.ModConfig;
 import at.woodexplosive.potion_expire_sounds.sound.ModSounds;
 import net.fabricmc.api.EnvType;
@@ -8,6 +9,7 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.Holder;
+import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -91,7 +93,22 @@ public class PotionExpires implements ClientTickEvents.StartTick {
         lastDurations.keySet().removeIf(type -> player.getEffect(type) == null);
     }
 
+    private EffectSoundOverride findOverride(MobEffectInstance effect) {
+        String descriptionId = effect.getEffect().value().getDescriptionId();
+        for (EffectSoundOverride override : ModConfig.INSTANCE.effectSoundOverrides) {
+            if (descriptionId.equals(override.effectId)) {
+                return override;
+            }
+        }
+        return null;
+    }
+
     private SoundEvent getExpireSound(MobEffectInstance effect) {
+        EffectSoundOverride override = findOverride(effect);
+        if (override != null && override.expireSound != null && !override.expireSound.isEmpty()) {
+            return SoundEvent.createVariableRangeEvent(Identifier.parse(override.expireSound));
+        }
+
         if (effect.getEffect().equals(MobEffects.STRENGTH) && ModConfig.INSTANCE.soundStrengthExpire != null)
             return SoundEvent.createVariableRangeEvent(ModConfig.INSTANCE.soundStrengthExpire);
         if (effect.getEffect().equals(MobEffects.SPEED) && ModConfig.INSTANCE.soundSpeedExpire != null)
@@ -103,6 +120,11 @@ public class PotionExpires implements ClientTickEvents.StartTick {
     }
 
     private SoundEvent getWarningSound(MobEffectInstance effect) {
+        EffectSoundOverride override = findOverride(effect);
+        if (override != null && override.warningSound != null && !override.warningSound.isEmpty()) {
+            return SoundEvent.createVariableRangeEvent(Identifier.parse(override.warningSound));
+        }
+
         if (effect.getEffect().equals(MobEffects.STRENGTH) && ModConfig.INSTANCE.soundStrengthWarning != null)
             return SoundEvent.createVariableRangeEvent(ModConfig.INSTANCE.soundStrengthWarning);
         if (effect.getEffect().equals(MobEffects.SPEED) && ModConfig.INSTANCE.soundSpeedWarning != null)
@@ -116,6 +138,14 @@ public class PotionExpires implements ClientTickEvents.StartTick {
     private float[] getVolumeAndPitch(MobEffectInstance effect, boolean isExpire) {
         float volume = isExpire ? ModConfig.INSTANCE.volumeExpire : ModConfig.INSTANCE.volumeWarning;
         float pitch = isExpire ? ModConfig.INSTANCE.pitchExpire : ModConfig.INSTANCE.pitchWarning;
+
+        EffectSoundOverride override = findOverride(effect);
+        if (override != null) {
+            String relevantSound = isExpire ? override.expireSound : override.warningSound;
+            if (relevantSound != null && !relevantSound.isEmpty()) {
+                return new float[]{override.volume, override.pitch};
+            }
+        }
 
         Holder<MobEffect> type = effect.getEffect();
 
