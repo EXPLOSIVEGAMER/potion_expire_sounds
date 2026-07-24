@@ -1,20 +1,18 @@
 package at.woodexplosive.potion_expire_sounds.config;
 
 import at.woodexplosive.potion_expire_sounds.PotionExpireSounds;
-import at.woodexplosive.potion_expire_sounds.sound.ModSounds;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.resources.Identifier;
-import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -101,6 +99,9 @@ public class ModConfig {
     public float soundFireResWarningVolume = 1.0F;
     public float soundFireResWarningPitch = 1.0F;
 
+    // Effect Overrides (dynamic per-effect sound list)
+    public List<EffectSoundOverride> effectSoundOverrides = new ArrayList<>();
+
     public static void load() {
         if (Files.exists(CONFIG_PATH)) {
             try (Reader reader = Files.newBufferedReader(CONFIG_PATH.resolve(MOD_ID+".json"))) {
@@ -161,7 +162,7 @@ public class ModConfig {
         return CONFIG_PATH.resolve("presets").toFile();
     }
 
-    public static boolean importPreset(java.nio.file.Path source) {
+    public static boolean importPreset(Path source) {
         try {
             var dir = CONFIG_PATH.resolve("presets");
             Files.createDirectories(dir);
@@ -185,7 +186,7 @@ public class ModConfig {
     public static List<String> getPresets() {
         try {
             var presetsDir = CONFIG_PATH.resolve("presets/");
-            if (!java.nio.file.Files.exists(presetsDir)) return List.of();
+            if (!Files.exists(presetsDir)) return List.of();
             try (var stream = Files.list(presetsDir)) {
                 return stream
                         .filter(p -> p.toString().endsWith(".json"))
