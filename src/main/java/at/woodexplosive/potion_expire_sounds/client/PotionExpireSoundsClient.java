@@ -15,7 +15,6 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.Identifier;
-import org.lwjgl.glfw.GLFW;
 
 
 import static at.woodexplosive.potion_expire_sounds.PotionExpireSounds.MOD_ID;
@@ -58,8 +57,8 @@ public class PotionExpireSoundsClient implements ClientModInitializer {
         openConfig = KeyMappingHelper.registerKeyMapping(
                 new KeyMapping(
                         "key." + MOD_ID + ".open_config",
-                        InputConstants.Type.KEYSYM,
-                        GLFW.GLFW_KEY_UNKNOWN,
+                        InputConstants.Type.KEYBOARD,
+                        InputConstants.UNKNOWN.getValue(),
                         CATEGORY
                 )
         );

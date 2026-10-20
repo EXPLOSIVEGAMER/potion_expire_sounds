@@ -5,6 +5,7 @@ import at.woodexplosive.potion_expire_sounds.config.custom.SoundControllerBuilde
 import at.woodexplosive.potion_expire_sounds.screen.ImportScreen;
 import at.woodexplosive.potion_expire_sounds.screen.PotionHudEditScreen;
 import at.woodexplosive.potion_expire_sounds.screen.PresetScreen;
+import com.mojang.blaze3d.Blaze3D;
 import dev.isxander.yacl3.api.*;
 import dev.isxander.yacl3.api.controller.*;
 import net.fabricmc.api.EnvType;
@@ -337,7 +338,7 @@ public class ModConfigScreen {
                 .name(Component.translatable(CP + "preset.open_folder"))
                 .description(OptionDescription.of(Component.translatable(CP + "preset.open_folder.desc")))
                 .text(Component.empty())
-                .action((_, _) -> Util.getPlatform().openFile(ModConfig.getPresetsDir()))
+                .action((_, _) -> Blaze3D.openUri(ModConfig.getPresetsDir().toURI()))
                 .build();
 
         ButtonOption importButton = ButtonOption.createBuilder()
